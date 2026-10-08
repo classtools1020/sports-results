@@ -78,22 +78,19 @@
 
 <div class="wrap hide" id="main">
   <h1>10/16（五）自然代課</h1>
-  <p style="margin:12px 4px"><a class="go p" href="#" id="cardBtn">📣 開場小卡</a></p>
   <div class="cls">
     <div class="ch"><span class="tag">甲班</span><b>第 5 節 13:10–13:55</b></div>
     <p class="goal">🧰 放大鏡、尋寶單</p>
-    <div class="step"><div class="t">①</div><div class="w">心情打卡</div><a class="go" href="games/checkin.html">開啟</a></div>
-    <div class="step"><div class="t">②</div><div class="w">MV〈折一下 Snap!〉</div><a class="go" href="light-refract/mv.html">開啟</a></div>
-    <div class="step"><div class="t">③</div><div class="w">透鏡實驗室</div><a class="go" href="light-lens/lab.html#lesson">開啟</a></div>
-    <div class="step"><div class="t">④</div><div class="w">放大鏡尋寶單</div><a class="go p" href="treasure.pdf" target="_blank" rel="noopener">開啟</a></div>
-    <div class="step"><div class="t">⑤</div><div class="w">折射大搶答</div><a class="go" href="games/light-refract-quiz.html">開啟</a></div>
+    <div class="step"><div class="t">①</div><div class="w">MV〈折一下 Snap!〉</div><a class="go" href="light-refract/mv.html">開啟</a></div>
+    <div class="step"><div class="t">②</div><div class="w">透鏡實驗室</div><a class="go" href="light-lens/lab.html#lesson">開啟</a></div>
+    <div class="step"><div class="t">③</div><div class="w">放大鏡尋寶單</div><a class="go p" href="treasure.pdf" target="_blank" rel="noopener">開啟</a></div>
+    <div class="step"><div class="t">④</div><div class="w">折射大搶答</div><a class="go" href="games/light-refract-quiz.html">開啟</a></div>
   </div>
   <div class="cls">
     <div class="ch"><span class="tag b">乙班</span><b>第 6 節 14:05–14:50</b></div>
-    <div class="step"><div class="t">①</div><div class="w">心情打卡</div><a class="go" href="games/checkin.html">開啟</a></div>
-    <div class="step"><div class="t">②</div><div class="w">MV〈折一下 Snap!〉</div><a class="go" href="light-refract/mv.html">開啟</a></div>
-    <div class="step"><div class="t">③</div><div class="w">光之環島列車</div><a class="go" href="games/taiwan-train.html">開啟</a></div>
-    <div class="step"><div class="t">④</div><div class="w">折射大搶答</div><a class="go" href="games/light-refract-quiz.html">開啟</a></div>
+    <div class="step"><div class="t">①</div><div class="w">MV〈折一下 Snap!〉</div><a class="go" href="light-refract/mv.html">開啟</a></div>
+    <div class="step"><div class="t">②</div><div class="w">光之環島列車</div><a class="go" href="games/taiwan-train.html">開啟</a></div>
+    <div class="step"><div class="t">③</div><div class="w">折射大搶答</div><a class="go" href="games/light-refract-quiz.html">開啟</a></div>
   </div>
   <div class="cls">
     <div class="ch"><span class="tag b">乙班</span><b>第 7 節 15:00–15:45</b></div>
@@ -128,8 +125,6 @@
   async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}
   async function tryOpen(){const v=$("code").value.trim();if(await sha(v)===HASH)unlock();else{$("err").textContent="通關碼不對，再試一次";$("code").select();}}
   $("open").onclick=tryOpen;$("code").addEventListener("keydown",e=>{if(e.key==="Enter")tryOpen();});
-  // 開場小卡
-  let kk=null;$("cardBtn").onclick=e=>{e.preventDefault();$("card").classList.remove("hide");if(!kk&&window.Koko){kk=Koko.mount($("kk"),{size:200});kk.say("","happy");}};
 })();
 </script>
 </body>
