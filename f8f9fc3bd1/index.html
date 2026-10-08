@@ -78,7 +78,7 @@
 (function(){
   const $=id=>document.getElementById(id);
   const UNTIL=Date.parse("2026-10-16T16:00:00+08:00");
-  const HASH="98eb1f769cc46eb269ebbc76ebc73b6b2e212782ac2dc85d00ad839b8aaf6eed";
+  const HASH="9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0";
   const KEY="subpack";
   if(Date.now()>=UNTIL){try{localStorage.removeItem(KEY);}catch(e){}$("gate").classList.add("hide");$("ended").classList.remove("hide");return;}
   function unlock(){$("gate").classList.add("hide");$("main").classList.remove("hide");
