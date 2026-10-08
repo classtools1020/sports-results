@@ -4,114 +4,74 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<meta name="theme-color" content="#05101f">
-<title>代課包・10/16 自然</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&display=swap">
+<title>10/16 自然代課</title>
 <style>
-  :root{--amber:#FFC93C;--teal:#42E0C8;--ink:#EAF6FF;--dim:#9DB8CF;--line:rgba(120,170,210,.3)}
-  *{box-sizing:border-box}
-  body{margin:0;font-family:'Noto Sans TC','Microsoft JhengHei',system-ui,sans-serif;color:var(--ink);min-height:100vh;
-    background:radial-gradient(120% 80% at 50% -10%,rgba(255,201,60,.12),transparent 55%),linear-gradient(165deg,#05101F,#0A2036 55%,#0E3350)}
-  .wm{position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.07;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='220'%3E%3Ctext x='10' y='120' transform='rotate(-18 260 110)' font-family='sans-serif' font-size='22' font-weight='700' fill='white'%3E© 曾瓊瑩老師原創教材・僅供 10/16 代課使用%3C/text%3E%3C/svg%3E")}
-  .wrap{max-width:980px;margin:0 auto;padding:22px 16px 60px}
-  h1{margin:0 0 4px;font-size:28px}h1 small{display:block;font-size:15px;color:var(--teal)}
-  .note{background:#13314f;border:2px solid var(--line);border-radius:16px;padding:12px 16px;margin:14px 0;line-height:1.7;font-weight:700}
-  .note b{color:var(--amber)}
-  h2{color:var(--amber);font-size:21px;margin:26px 4px 10px}
-  .prep{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
-  .prep label{display:flex;gap:10px;align-items:center;background:#0f2841;border:2px solid var(--line);border-radius:12px;padding:10px 12px;font-weight:800;cursor:pointer}
-  .prep input{width:20px;height:20px}
-  .cls{background:#0d2238;border:2px solid var(--line);border-radius:20px;padding:16px;margin:14px 0}
-  .ch{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px}
-  .tag{background:var(--amber);color:#1e1400;border-radius:999px;padding:4px 14px;font-weight:900}.tag.b{background:var(--teal);color:#032a24}
-  .ch b{font-size:22px}.ch span{color:var(--dim);font-weight:800}
-  .goal{color:#cfe8ff;font-weight:700;margin:0 0 10px}
-  .step{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;background:#13314f;border:2px solid var(--line);border-radius:14px;padding:10px 12px;margin:8px 0}
-  .step .t{text-align:center;font-weight:900;color:var(--amber);font-size:30px;line-height:1}
-  .step .w{font-weight:900;font-size:20px}.step .w small{display:block;color:var(--dim);font-weight:700;font-size:14px;margin-top:2px}
-  .go{background:linear-gradient(180deg,#42E0C8,#1FBFA8);color:#04302A;font-weight:900;text-decoration:none;border-radius:12px;padding:10px 14px;white-space:nowrap;box-shadow:0 4px 0 #14907F}
-  .go.p{background:linear-gradient(180deg,#FFE27A,#FFB400);color:#2A1700;box-shadow:0 4px 0 #C9860F}
-  .go.none{background:#2a3d52;color:var(--dim);box-shadow:none}
-  .sos{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
-  .sos div{background:#2a1520;border:2px solid #7a2f4a;border-radius:14px;padding:10px 12px;font-weight:700;line-height:1.6}
-  .files{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
-  footer{margin-top:30px;color:var(--dim);font-size:13px;text-align:center;line-height:1.7}
-  /* 鎖 */
-  .gate,.ended{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#05101F;padding:20px;text-align:center}
-  .gate input{font-size:34px;letter-spacing:.4em;text-align:center;width:220px;border-radius:14px;border:3px solid var(--amber);background:#0f2841;color:#fff;padding:10px;font-family:inherit}
-  .gate button{font-family:inherit;font-size:20px;font-weight:900;border:none;border-radius:14px;padding:12px 28px;background:linear-gradient(180deg,#42E0C8,#1FBFA8);color:#04302A;cursor:pointer}
-  .err{color:#ff8fa8;font-weight:800;min-height:1.4em}
+  body{margin:0;background:#fff;color:#222;font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",sans-serif;font-size:18px;line-height:1.6}
+  .wrap{max-width:720px;margin:0 auto;padding:24px 16px 48px}
+  h1{font-size:24px;margin:0 0 20px;padding-bottom:8px;border-bottom:2px solid #222}
+  h2{font-size:19px;margin:28px 0 6px}
+  .prep{margin:0 0 6px;color:#555;font-size:16px}
+  ol{margin:0;padding-left:1.6em}
+  li{padding:6px 0;border-bottom:1px solid #e3e3e3}
+  a{color:#1a4f8b}
+  .files{margin-top:32px;padding-top:12px;border-top:1px solid #ccc;font-size:16px}
+  .files a{margin-right:18px}
+  footer{margin-top:32px;color:#888;font-size:13px}
+  .gate,.ended{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:80vh;text-align:center}
+  .gate input{font-size:22px;letter-spacing:.3em;text-align:center;width:140px;padding:6px;border:1px solid #888;border-radius:4px}
+  .gate button{font-size:17px;padding:6px 20px;border:1px solid #888;border-radius:4px;background:#f3f3f3;cursor:pointer}
+  .err{color:#b00;min-height:1.4em;font-size:15px}
   .hide{display:none!important}
-  /* 開場小卡 */
-  .card{position:fixed;inset:0;z-index:90;background:radial-gradient(circle at 50% 40%,#16416a,#05101F);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-align:center;padding:20px}
-  .card .big{font-size:min(9vw,64px);font-weight:900;line-height:1.3}
-  .card .sm{font-size:min(5vw,30px);font-weight:800;color:#ffe08a}
-  .card .x{position:absolute;bottom:20px;color:var(--dim);font-weight:700}
-  @media print{.wm{display:none}}
 </style>
 </head>
 <body>
-<div class="wm"></div>
 
 <div class="gate" id="gate">
-  <div style="font-size:60px">🔐</div>
-  <h1>代課包<small>請輸入 Stacey 老師給您的 4 位數通關碼</small></h1>
+  <div>請輸入通關碼</div>
   <input id="code" inputmode="numeric" maxlength="4" autocomplete="off">
-  <button id="open">打開</button>
+  <button id="open">確定</button>
   <div class="err" id="err"></div>
 </div>
 
-<div class="ended hide" id="ended">
-  <div style="font-size:60px">🌙</div>
-  <h1>這份代課包已經結束了<small>謝謝您的協助！</small></h1>
-</div>
-
-<div class="card hide" id="card" onclick="this.classList.add('hide')">
-  <div id="kk"></div>
-  <div class="big">Stacey 老師今天請假<br>下禮拜見！</div>
-  <div class="sm">今天由＿＿＿老師帶大家當「光線特勤隊」✨</div>
-  <div class="x">（點一下關閉）</div>
-</div>
+<div class="ended hide" id="ended"><div>本頁已關閉</div></div>
 
 <div class="wrap hide" id="main">
   <h1>10/16（五）自然代課</h1>
-  <div class="cls">
-    <div class="ch"><span class="tag">甲班</span><b>第 5 節 13:10–13:55</b></div>
-    <p class="goal">🧰 放大鏡、尋寶單</p>
-    <div class="step"><div class="t">①</div><div class="w">MV〈折一下 Snap!〉</div><a class="go" href="light-refract/mv.html">開啟</a></div>
-    <div class="step"><div class="t">②</div><div class="w">透鏡實驗室</div><a class="go" href="light-lens/lab.html#lesson">開啟</a></div>
-    <div class="step"><div class="t">③</div><div class="w">放大鏡尋寶單</div><a class="go p" href="treasure.pdf" target="_blank" rel="noopener">開啟</a></div>
-    <div class="step"><div class="t">④</div><div class="w">折射大搶答</div><a class="go" href="games/light-refract-quiz.html">開啟</a></div>
-  </div>
-  <div class="cls">
-    <div class="ch"><span class="tag b">乙班</span><b>第 6 節 14:05–14:50</b></div>
-    <div class="step"><div class="t">①</div><div class="w">MV〈折一下 Snap!〉</div><a class="go" href="light-refract/mv.html">開啟</a></div>
-    <div class="step"><div class="t">②</div><div class="w">光之環島列車</div><a class="go" href="games/taiwan-train.html">開啟</a></div>
-    <div class="step"><div class="t">③</div><div class="w">折射大搶答</div><a class="go" href="games/light-refract-quiz.html">開啟</a></div>
-  </div>
-  <div class="cls">
-    <div class="ch"><span class="tag b">乙班</span><b>第 7 節 15:00–15:45</b></div>
-    <p class="goal">🧰 透明片、滴管、一杯水、尋寶單、畫卡、放大鏡</p>
-    <div class="step"><div class="t">①</div><div class="w">光之呼吸站</div><a class="go" href="games/breathe.html">開啟</a></div>
-    <div class="step"><div class="t">②</div><div class="w">事件簿・生活案件</div><a class="go" href="light-refract/story.html#life">開啟</a></div>
-    <div class="step"><div class="t">③</div><div class="w">水滴放大鏡（尋寶單＋滴一滴水）</div><a class="go p" href="treasure.pdf" target="_blank" rel="noopener">開啟</a></div>
-    <div class="step"><div class="t">④</div><div class="w">「我看到的光」畫卡</div><a class="go p" href="draw.pdf" target="_blank" rel="noopener">開啟</a></div>
+
+  <h2>甲班　第 5 節　13:10–13:55</h2>
+  <p class="prep">準備：放大鏡、尋寶單</p>
+  <ol>
+    <li><a href="light-refract/mv.html">MV〈折一下 Snap!〉</a></li>
+    <li><a href="light-lens/lab.html#lesson">透鏡實驗室</a></li>
+    <li><a href="treasure.pdf" target="_blank" rel="noopener">放大鏡尋寶單</a></li>
+    <li><a href="games/light-refract-quiz.html">折射大搶答</a></li>
+  </ol>
+
+  <h2>乙班　第 6 節　14:05–14:50</h2>
+  <ol>
+    <li><a href="light-refract/mv.html">MV〈折一下 Snap!〉</a></li>
+    <li><a href="games/taiwan-train.html">光之環島列車</a></li>
+    <li><a href="games/light-refract-quiz.html">折射大搶答</a></li>
+  </ol>
+
+  <h2>乙班　第 7 節　15:00–15:45</h2>
+  <p class="prep">準備：透明片、滴管、一杯水、尋寶單、畫卡、放大鏡</p>
+  <ol>
+    <li><a href="games/breathe.html">光之呼吸站</a></li>
+    <li><a href="light-refract/story.html#life">事件簿・生活案件</a></li>
+    <li><a href="treasure.pdf" target="_blank" rel="noopener">水滴放大鏡（尋寶單）</a></li>
+    <li><a href="draw.pdf" target="_blank" rel="noopener">「我看到的光」畫卡</a></li>
+  </ol>
+
+  <div class="files">紙本：
+    <a href="plan.pdf" target="_blank" rel="noopener">流程單</a>
+    <a href="treasure.pdf" target="_blank" rel="noopener">尋寶單</a>
+    <a href="draw.pdf" target="_blank" rel="noopener">畫卡</a>
   </div>
 
-  <h2>🖨️ 紙本</h2>
-  <div class="files">
-    <a class="go p" href="plan.pdf" target="_blank" rel="noopener">📋 流程單</a>
-    <a class="go p" href="treasure.pdf" target="_blank" rel="noopener">🔍 尋寶單</a>
-    <a class="go p" href="draw.pdf" target="_blank" rel="noopener">🎨 畫卡</a>
-  </div>
-
-  <footer>© 曾瓊瑩（Stacey）老師原創教材・僅供 2026/10/16 代課使用・請勿轉傳</footer>
+  <footer>© 曾瓊瑩老師原創教材・僅供 2026/10/16 代課使用・請勿轉傳</footer>
 </div>
 
-<script src="light-refract/koko.js"></script>
 <script>
 (function(){
   const $=id=>document.getElementById(id);
@@ -123,7 +83,7 @@
     try{localStorage.setItem(KEY,JSON.stringify({url:location.pathname,until:UNTIL}));}catch(e){}}
   try{const p=JSON.parse(localStorage.getItem(KEY)||"null");if(p&&p.url===location.pathname&&Date.now()<p.until)unlock();}catch(e){}
   async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}
-  async function tryOpen(){const v=$("code").value.trim();if(await sha(v)===HASH)unlock();else{$("err").textContent="通關碼不對，再試一次";$("code").select();}}
+  async function tryOpen(){const v=$("code").value.trim();if(await sha(v)===HASH)unlock();else{$("err").textContent="通關碼不正確";$("code").select();}}
   $("open").onclick=tryOpen;$("code").addEventListener("keydown",e=>{if(e.key==="Enter")tryOpen();});
 })();
 </script>

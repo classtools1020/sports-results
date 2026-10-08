@@ -236,15 +236,15 @@
 
   /* ===== 代課模式：從代課包進來時，隱藏主選單與網站其他入口，只留「回代課包」 ===== */
   const UNTIL=Date.parse("2026-10-16T16:00:00+08:00");
-  if(Date.now()>=UNTIL){document.documentElement.innerHTML='<body style="background:#0b1626;color:#ffe08a;font:900 28px system-ui;display:grid;place-items:center;height:100vh;margin:0">本教材已下架，謝謝使用 🙏</body>';window.FX=FX;return;}
+  if(Date.now()>=UNTIL){document.documentElement.innerHTML='<body style="background:#fff;color:#222;font:20px sans-serif;display:grid;place-items:center;height:100vh;margin:0">本頁已關閉</body>';window.FX=FX;return;}
   FX.sub={url:HOME,until:UNTIL};
   (()=>{const w=()=>{if(document.getElementById("fxwm"))return;const d=document.createElement("div");d.id="fxwm";d.textContent="© 曾瓊瑩老師原創教材・僅供 2026/10/16 代課使用・請勿轉傳";d.style.cssText="position:fixed;right:10px;bottom:6px;z-index:99998;font:700 11px system-ui,sans-serif;color:rgba(255,255,255,.6);text-shadow:0 1px 2px rgba(0,0,0,.85);pointer-events:none";document.body.appendChild(d);};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",w);else w();})();
   FX.homeURL=()=>FX.sub?FX.sub.url:HOME;
   if(FX.sub){
-    const st=document.createElement("style");st.textContent='a[href="../"],a[href="/"],a.fixbtn,a.mainmenu-btn,#fxhome,#fxflow,.chs ~ .nav button[onclick*="print"]{display:none!important}#fxsub{position:fixed;left:12px;top:12px;z-index:99999;background:#3a2f10;border:2px solid #ffc93c;color:#ffe08a;font-weight:900;font-size:15px;text-decoration:none;padding:8px 14px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,.45);font-family:"Noto Sans TC",sans-serif}@media print{#fxsub{display:none!important}}';
+    const st=document.createElement("style");st.textContent='a[href="../"],a[href="/"],a.fixbtn,a.mainmenu-btn,#fxhome,#fxflow,.chs ~ .nav button[onclick*="print"]{display:none!important}#fxsub{position:fixed;left:12px;top:12px;z-index:99999;background:#fff;border:1px solid #888;color:#222;font-weight:700;font-size:15px;text-decoration:none;padding:5px 12px;border-radius:4px;font-family:"Microsoft JhengHei","Noto Sans TC",sans-serif}@media print{#fxsub{display:none!important}}';
     (document.head||document.documentElement).appendChild(st);
     document.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest("a[href]");if(!a)return;const h=a.getAttribute("href");if(h==="../"||h==="/"){e.preventDefault();location.href=FX.sub.url;}},true);
-    const add=()=>{if(document.getElementById("fxsub"))return;const a=document.createElement("a");a.id="fxsub";a.href=FX.sub.url;a.textContent="⬅ 回代課包";document.body.appendChild(a);};
+    const add=()=>{if(document.getElementById("fxsub"))return;const a=document.createElement("a");a.id="fxsub";a.href=FX.sub.url;a.textContent="← 回目錄";document.body.appendChild(a);};
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",add);else add();
   }
   function homeBtn(){if(FX.sub)return;const p=location.pathname.replace(/index\.html$/,"");if(/^\/light\/?$/.test(p))return;
