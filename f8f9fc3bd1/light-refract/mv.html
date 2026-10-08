@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>折一下 Snap! MV｜Refraction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@700;900&family=Bungee&display=swap" rel="stylesheet">
+<style>
+:root{--page:#EEF4FA;--ink:#10202E;--btn:#FFFFFF;--btn-ink:#10202E;--btn-line:#C9D8E6;--hot:#FF3FB0;--cyan:#2CE6FF;--muted:#55697C;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#071019;--ink:#EAF4FF;--btn:#10202E;--btn-ink:#EAF4FF;--btn-line:#25425C;--muted:#9DB4C9;}}
+:root[data-theme="dark"]{--page:#071019;--ink:#EAF4FF;--btn:#10202E;--btn-ink:#EAF4FF;--btn-line:#25425C;--muted:#9DB4C9;}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:96px}
+.app{max-width:1120px;margin:0 auto;padding:12px 12px 20px}
+h1{font-weight:900;font-size:clamp(20px,4.2vw,30px);margin:4px 4px 10px;letter-spacing:.04em;padding-right:120px}
+h1 em{font-family:"Bungee","Noto Sans TC",sans-serif;font-style:normal;color:var(--hot);font-size:.7em;margin-left:.4em;letter-spacing:.06em}
+.stage{position:relative;width:100%;max-width:max(320px,calc((100vh - 350px)*16/9));margin:0 auto;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#05101A;box-shadow:0 0 0 2px #12324A,0 12px 36px rgba(10,40,70,.45);user-select:none;-webkit-user-select:none;--u:1}
+.stage:fullscreen{max-width:none;border-radius:0}
+.stage svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.kara{position:absolute;left:0;right:0;bottom:calc(var(--u)*26px);display:flex;justify-content:center;pointer-events:none}
+.kara div{background:rgba(4,14,26,.82);border-radius:calc(var(--u)*24px);padding:calc(var(--u)*8px) calc(var(--u)*36px);font-weight:900;font-size:calc(var(--u)*74px);line-height:1.3;letter-spacing:.05em;white-space:nowrap;box-shadow:0 0 0 calc(var(--u)*4px) var(--cyan),0 0 calc(var(--u)*30px) rgba(44,230,255,.6)}
+.kara span{display:inline-block;color:#fff;transition:color .1s,transform .1s,text-shadow .1s}
+.kara span.sung{color:#8FF3FF}
+.kara span.now{color:#FFE14D;transform:translateY(calc(var(--u)*-10px)) scale(1.2);text-shadow:0 0 calc(var(--u)*18px) #FFB800}
+.kara span.gap{width:calc(var(--u)*30px)}
+.kara div.cue{color:#FFE66B;text-shadow:0 0 calc(var(--u)*16px) #FFB400;font-size:calc(var(--u)*60px)}
+.sec{position:absolute;top:calc(var(--u)*22px);left:calc(var(--u)*24px);background:rgba(4,14,26,.78);color:#fff;font-weight:900;font-size:calc(var(--u)*34px);padding:calc(var(--u)*6px) calc(var(--u)*24px);border-radius:999px;box-shadow:0 0 0 calc(var(--u)*3px) var(--hot),0 0 calc(var(--u)*18px) rgba(255,63,176,.55)}
+.overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*22px);background:rgba(3,10,20,.7)}
+.overlay[hidden]{display:none}
+.ov-title{font-weight:900;color:#fff;font-size:clamp(28px,calc(var(--u)*120px),86px);letter-spacing:.08em;margin:0;text-shadow:0 0 12px #2CE6FF,0 0 32px #2CE6FF}
+.ov-sub{font-family:"Bungee",sans-serif;color:#FFE14D;font-size:clamp(14px,calc(var(--u)*40px),28px);margin:0;letter-spacing:.2em;text-shadow:0 0 12px #FFB800}
+.big{font-family:"Noto Sans TC",sans-serif;font-weight:900;font-size:clamp(18px,calc(var(--u)*58px),42px);padding:.5em 1.4em;border-radius:999px;border:0;background:linear-gradient(90deg,#14B8E6,#FF3FB0);color:#fff;cursor:pointer;box-shadow:0 0 24px rgba(44,230,255,.8)}
+.big:active{transform:scale(.97)}
+.big:focus-visible,.ctl button:focus-visible,.steps button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.steps{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 4px;scrollbar-width:none}
+.steps::-webkit-scrollbar{display:none}
+.steps button{flex:0 0 auto;min-height:44px;padding:0 12px;border-radius:12px;border:2px solid var(--btn-line);background:var(--btn);color:var(--btn-ink);font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;opacity:.65}
+.steps button.done{opacity:.4}
+.steps button.now{opacity:1;border-color:transparent;background:linear-gradient(90deg,#14B8E6,#FF3FB0);color:#fff}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.ctl button{flex:1 1 auto;min-width:96px;min-height:48px;border-radius:14px;border:2px solid var(--btn-line);background:var(--btn);color:var(--btn-ink);font-family:inherit;font-weight:900;font-size:17px;cursor:pointer}
+.ctl button.main{flex:2 1 auto;background:linear-gradient(90deg,#14B8E6,#FF3FB0);color:#fff;border-color:transparent}
+details{margin:14px 4px 0;background:var(--btn);border:2px solid var(--btn-line);border-radius:14px;padding:10px 14px}
+summary{font-weight:900;cursor:pointer}
+.lyr{font-size:18px;line-height:1.9;margin:8px 0 0}
+.lyr b{font-size:14px;color:var(--muted);display:block;margin-top:8px}
+.note{color:var(--muted);font-size:14px;margin:12px 4px 0;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>折一下 Snap!<em>REFRACTION MV</em></h1>
+  <div class="stage" id="stage">
+    <svg id="svg" viewBox="0 0 1600 900" aria-label="折一下 Snap! MV">
+      <defs>
+        <filter id="neon" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+        <filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="16"/></filter>
+        <filter id="bgblur"><feGaussianBlur stdDeviation="10"/></filter>
+        <filter id="drop" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity=".45"/></filter>
+        <radialGradient id="vig" cx="50%" cy="50%" r="72%"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".62"/></radialGradient>
+      </defs>
+      <rect width="1600" height="900" fill="#05101A"/>
+      <g id="cam"><g id="scene"></g></g>
+      <rect width="1600" height="900" fill="url(#vig)" pointer-events="none"/>
+      <g id="fw"></g>
+      <rect id="flash" width="1600" height="900" fill="#FFFFFF" opacity="0" pointer-events="none"/>
+    </svg>
+    <div class="sec" id="sec">🎵 前奏</div>
+    <div class="kara"><div id="kara" class="cue">🎧 準備好了嗎？</div></div>
+    <div class="overlay" id="startOv"><p class="ov-title">折一下 Snap!</p><p class="ov-sub">REFRACTION · MV</p><button class="big" id="startBtn">▶ 播放</button></div>
+    <div class="overlay" id="endOv" hidden><p class="ov-title">任務完成！👏</p><button class="big" id="againBtn">↻ 再看一次</button></div>
+  </div>
+  <div class="steps" id="steps" aria-label="段落"></div>
+  <div class="ctl">
+    <button id="playBtn" class="main">▶ 播放</button>
+    <button id="backBtn">⏪ 5 秒</button>
+    <button id="restartBtn">↻ 從頭</button>
+    <button id="fsBtn">⛶ 全螢幕</button>
+  </div>
+  <details>
+    <summary>📄 完整歌詞（可以印出來）</summary>
+    <div class="lyr">
+      <b>前奏</b>Yeah—折射偵探，上線<br>Snap! Snap!
+      <b>主歌一</b>放學手搖 珍珠紅茶<br>吸管一插 下面怎麼歪掉啦<br>從旁邊看 它斷成兩半<br>拿出來看 欸？明明是直的嘛
+      <b>導歌</b>不是吸管壞掉<br>不是眼睛不好<br>是光偷偷 換了跑道
+      <b>副歌</b>光走直線 直直往前衝<br>碰到水面 Snap! 折一下<br>折一下 換方向 再繼續直直走<br>這就叫做——折射！<br>Snap! 折一下（折一下）<br>Snap! 換方向（換方向）<br>光沒有變彎彎 只是在水面<br>Snap! 折一下
+      <b>主歌二</b>碗裡硬幣 躲在邊邊看不見<br>倒點水 硬幣自己浮上來<br>它沒有動 是光在水面折一下<br>把它的影子 抬高一點點<br>把它的影子 抬高一點點
+      <b>Rap</b>空氣裡 跑超快 像在柏油路上衝<br>進到水裡 變慢了 像踩進沙灘一樣<br>一邊先慢 一邊還快 隊伍方向就換<br>不是繞圈圈 是「折」一下 Yeah<br>反射 碰到鏡子 彈回來<br>折射 碰到水面 穿進去<br>直線 折一下 直線<br>記起來 你就是偵探
+      <b>主歌三</b>游泳池 看起來淺淺 其實更深<br>竹東溪 清清的 也別一看就跳下去<br>先看深度 大人在旁<br>掉下去了 仰漂等待 別慌張
+      <b>副歌</b>光走直線 直直往前衝<br>碰到水面 Snap! 折一下<br>折一下 換方向 再繼續直直走<br>這就叫做——折射！<br>Snap! 折一下（折一下）<br>Snap! 換方向（換方向）<br>光沒有變彎彎 只是在水面<br>Snap! 折一下
+      <b>主歌四</b>一滴水 圓圓的 字變大<br>眼鏡 放大鏡 都在幫忙<br>光穿過去 換個方向<br>世界 一下子 看清楚啦
+      <b>最後副歌</b>光走直線 直直往前衝<br>碰到水面 Snap! 折一下<br>折一下 換方向 再繼續直直走<br>這就叫做——折射！<br>Snap! 折一下（全班一起！）<br>Snap! 換方向（再大聲！）<br>吸管沒有斷 是光在水面<br>Snap! 折一下
+      <b>尾聲</b>光走直線……碰到水面……<br>全班：折一下！<br>Snap!
+    </div>
+  </details>
+  <p class="note">歌聲是 Gemini 生成的版本，字幕依歌聲對齊。吸管杯、雷射水箱、鏡子、台灣街道、花蓮海灘、清澈湖水、舞台燈、硬幣、游泳池、撈魚網、放大鏡、水滴、內灣線小火車是真實照片；手搖飲杯和「光光」角色是畫的。點畫面可以暫停／繼續，上方段落按鈕可以直接跳到那一段。</p>
+</div>
+<audio id="audio" preload="auto" src="mv/song.mp3"></audio>
+<script>
+(function(){
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const seg=(t,a,b)=>clamp((t-a)/(b-a));
+const eo=t=>1-Math.pow(1-t,3);
+const eio=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const back=t=>{const c=1.9;return t<=0?0:1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2);};
+const lerp=(a,b,t)=>a+(b-a)*t;
+let uid=0;const gid=()=>'q'+(uid++);
+function grad(g,stops,radial,attrs){const id=gid();const d=el('defs',{},g);const G=el(radial?'radialGradient':'linearGradient',Object.assign({id},attrs||{}),d);stops.forEach(([o,c,a])=>el('stop',{offset:o,'stop-color':c,'stop-opacity':a==null?1:a},G));return `url(#${id})`;}
+function txt(parent,x,y,s,size,fill,extra){const t=el('text',Object.assign({x,y,'text-anchor':'middle','dominant-baseline':'central','font-family':'Noto Sans TC, sans-serif','font-weight':900,'font-size':size,fill},extra||{}),parent);t.textContent=s;return t;}
+function pop(node,cx,cy,k){node.setAttribute('transform',`translate(${cx},${cy}) scale(${Math.max(0.001,k)}) translate(${-cx},${-cy})`);node.setAttribute('opacity',clamp(k*1.5));}
+
+const SEGS=[{"s": 0, "ly": null, "ct": [], "sec": "🎵 前奏", "vis": "title", "party": false, "e": 12.68}, {"s": 12.68, "ly": "放學手搖 珍珠紅茶", "ct": [12.8, 13.3, 13.8, 14.1, 14.4, 14.76, 15.16, 15.48], "sec": "🧋 主歌一", "vis": "V1_0", "party": false, "e": 16.78}, {"s": 16.78, "ly": "吸管一插 下面怎麼歪掉啦", "ct": [16.9, 17.16, 17.44, 17.68, 18.04, 18.36, 18.64, 18.76, 19.02, 19.28, 19.54], "sec": "🧋 主歌一", "vis": "V1_1", "party": false, "e": 20.76}, {"s": 20.76, "ly": "從旁邊看 它斷成兩半", "ct": [20.88, 21.2, 21.48, 22.0, 22.373, 22.747, 23.12, 23.44, 23.76], "sec": "🧋 主歌一", "vis": "P_0", "party": false, "e": 24.16}, {"s": 24.16, "ly": "拿出來看 欸？明明是直的嘛", "ct": [24.28, 24.56, 24.8, 25.08, 25.427, 25.773, 26.12, 26.4, 26.72, 27.08, 27.44, 27.84], "sec": "🧋 主歌一", "vis": "V1_2", "party": false, "e": 28.32}, {"s": 28.32, "ly": "不是吸管壞掉", "ct": [28.44, 28.72, 29.173, 29.627, 30.08, 30.64], "sec": "👀 導歌", "vis": "NOT1", "party": false, "e": 32.2}, {"s": 32.2, "ly": "不是眼睛不好", "ct": [32.32, 32.56, 33.08, 33.52, 34.12, 34.64], "sec": "👀 導歌", "vis": "NOT2", "party": false, "e": 36.32}, {"s": 36.32, "ly": "是光偷偷 換了跑道", "ct": [36.44, 36.8, 37.52, 37.88, 38.4, 38.667, 38.933, 39.2], "sec": "👀 導歌", "vis": "P_1", "party": false, "e": 42.02}, {"s": 42.02, "ly": "光走直線 直直往前衝", "ct": [42.14, 42.4, 42.64, 42.76, 42.9, 43.04, 43.4, 43.6, 43.8], "sec": "⭐ 副歌", "vis": "CH_STRAIGHT", "party": false, "e": 43.96}, {"s": 43.96, "ly": "碰到水面 Snap! 折一下", "ct": [44.08, 44.34, 44.6, 44.84, 45.027, 45.213, 45.4, 45.68, 45.84], "sec": "⭐ 副歌", "vis": "C_0", "party": false, "e": 46.04}, {"s": 46.04, "ly": "折一下 換方向 再繼續直直走", "ct": [46.16, 46.44, 46.72, 47.04, 47.28, 47.52, 47.84, 48.08, 48.2, 48.48, 48.76, 49.04], "sec": "⭐ 副歌", "vis": "C_1", "party": false, "e": 49.52}, {"s": 49.52, "ly": "這就叫做——折射！", "ct": [49.64, 49.9, 50.16, 50.42, 50.68, 50.94, 51.2, 51.46, 51.72], "sec": "⭐ 副歌", "vis": "C_2", "party": false, "e": 51.68}, {"s": 51.68, "ly": "Snap! 折一下（折一下）", "ct": [51.8, 52.06, 52.32, 52.52, 52.72, 52.973, 53.227, 53.48, 53.6, 53.86], "sec": "⭐ 副歌", "vis": "SNAP1", "party": false, "e": 53.52}, {"s": 53.52, "ly": "Snap! 換方向（換方向）", "ct": [53.64, 53.9, 54.16, 54.42, 54.68, 54.88, 55.08, 55.32, 55.52, 55.78], "sec": "⭐ 副歌", "vis": "SNAP2", "party": false, "e": 55.88}, {"s": 55.88, "ly": "光沒有變彎彎 只是在水面", "ct": [56.0, 56.32, 56.52, 56.68, 56.8, 57.08, 57.29, 57.5, 57.71, 57.92, 58.2], "sec": "⭐ 副歌", "vis": "KINK", "party": false, "e": 58.457}, {"s": 58.457, "ly": "Snap! 折一下", "ct": [58.577, 58.953, 59.33, 59.707, 60.083], "sec": "⭐ 副歌", "vis": "SNAP3", "party": false, "e": 60.58}, {"s": 60.58, "ly": "碗裡硬幣 躲在邊邊看不見", "ct": [60.7, 60.95, 62.16, 63.6, 64.0, 64.32, 64.56, 64.8, 65.16, 65.52, 65.84], "sec": "🪙 主歌二", "vis": "V2_0", "party": false, "e": 66.82}, {"s": 66.82, "ly": "倒點水 硬幣自己浮上來", "ct": [66.94, 67.2, 67.52, 67.867, 68.213, 68.56, 68.84, 69.12, 69.48, 69.88], "sec": "🪙 主歌二", "vis": "V2_1", "party": false, "e": 70.5}, {"s": 70.5, "ly": "它沒有動 是光在水面折一下", "ct": [70.62, 70.88, 71.16, 71.48, 71.72, 72.0, 72.28, 72.56, 72.8, 73.16, 73.52, 73.72], "sec": "🪙 主歌二", "vis": "R_0", "party": false, "e": 74.08}, {"s": 74.08, "ly": "把它的影子 抬高一點點", "ct": [74.2, 74.56, 74.8, 75.08, 75.48, 76.32, 76.76, 77.12, 77.44, 77.84], "sec": "🪙 主歌二", "vis": "V2_1b", "party": false, "e": 79.8}, {"s": 79.8, "ly": "把它的影子 抬高一點點", "ct": [79.92, 80.2, 80.36, 80.6, 80.8, 81.04, 81.24, 81.44, 81.56, 81.76], "sec": "🪙 主歌二", "vis": "V2_1c", "party": false, "e": 81.84}, {"s": 81.84, "ly": "空氣裡 跑超快 像在柏油路上衝", "ct": [81.96, 82.08, 82.24, 82.4, 82.56, 82.72, 82.88, 82.96, 83.12, 83.28, 83.44, 83.6, 83.76], "sec": "🎤 Rap", "vis": "ROAD", "party": false, "e": 83.84}, {"s": 83.84, "ly": "進到水裡 變慢了 像踩進沙灘一樣", "ct": [83.96, 84.16, 84.28, 84.4, 84.56, 84.68, 84.8, 84.96, 85.08, 85.23, 85.38, 85.53, 85.68, 85.8], "sec": "🎤 Rap", "vis": "SAND", "party": false, "e": 85.88}, {"s": 85.88, "ly": "一邊先慢 一邊還快 隊伍方向就換", "ct": [86.0, 86.12, 86.32, 86.4, 86.48, 86.64, 86.72, 86.8, 87.04, 87.16, 87.36, 87.62, 87.88, 88.14], "sec": "🎤 Rap", "vis": "MARCH", "party": false, "e": 87.66}, {"s": 87.66, "ly": "不是繞圈圈 是「折」一下 Yeah", "ct": [87.78, 88.04, 88.3, 88.56, 88.68, 88.96, 89.088, 89.216, 89.344, 89.472, 89.6, 89.86], "sec": "🎤 Rap", "vis": "KINK", "party": false, "e": 89.92}, {"s": 89.92, "ly": "反射 碰到鏡子 彈回來", "ct": [90.04, 90.28, 90.52, 90.68, 90.88, 91.08, 91.3, 91.52, 91.8], "sec": "🎤 Rap", "vis": "REFL", "party": false, "e": 91.84}, {"s": 91.84, "ly": "折射 碰到水面 穿進去", "ct": [91.96, 92.2, 92.44, 92.68, 92.88, 93.08, 93.32, 93.56, 93.72], "sec": "🎤 Rap", "vis": "REFR", "party": false, "e": 93.96}, {"s": 93.96, "ly": "直線 折一下 直線", "ct": [94.08, 94.32, 94.64, 94.8, 95.04, 95.36, 95.6], "sec": "🎤 Rap", "vis": "KINK2", "party": false, "e": 95.96}, {"s": 95.96, "ly": "記起來 你就是偵探", "ct": [96.08, 96.24, 96.48, 96.8, 96.96, 97.12, 97.4, 97.68], "sec": "🎤 Rap", "vis": "R_2", "party": false, "e": 97.88}, {"s": 97.88, "ly": "游泳池 看起來淺淺 其實更深", "ct": [98.0, 98.293, 98.587, 98.88, 99.16, 99.32, 99.6, 99.84, 100.08, 100.24, 100.56, 100.84], "sec": "🏊 主歌三", "vis": "V2_2", "party": false, "e": 101.24}, {"s": 101.24, "ly": "竹東溪 清清的 也別一看就跳下去", "ct": [101.36, 101.707, 102.053, 102.4, 102.76, 103.08, 103.533, 103.987, 104.44, 104.68, 104.96, 105.24, 105.52, 105.8], "sec": "🏊 主歌三", "vis": "CREEK", "party": false, "e": 106.04}, {"s": 106.04, "ly": "先看深度 大人在旁", "ct": [106.16, 106.32, 106.64, 106.76, 107.04, 107.28, 107.44, 107.7], "sec": "🏊 主歌三", "vis": "SAFE", "party": false, "e": 108.0}, {"s": 108.0, "ly": "掉下去了 仰漂等待 別慌張", "ct": [108.12, 108.38, 108.64, 108.8, 109.04, 109.3, 109.56, 109.8, 110.12, 110.52, 110.92], "sec": "🏊 主歌三", "vis": "FLOAT", "party": false, "e": 111.52}, {"s": 111.52, "ly": "光走直線 直直往前衝", "ct": [111.64, 112.4, 112.6, 112.8, 112.88, 112.96, 113.4, 113.6, 113.76], "sec": "⭐ 副歌", "vis": "CH_STRAIGHT", "party": false, "e": 113.96}, {"s": 113.96, "ly": "碰到水面 Snap! 折一下", "ct": [114.08, 114.32, 114.56, 114.8, 115.0, 115.2, 115.4, 115.6, 115.84], "sec": "⭐ 副歌", "vis": "C_0", "party": false, "e": 116.04}, {"s": 116.04, "ly": "折一下 換方向 再繼續直直走", "ct": [116.16, 116.48, 116.68, 117.0, 117.28, 117.52, 117.8, 118.04, 118.2, 118.467, 118.733, 119.0], "sec": "⭐ 副歌", "vis": "C_1", "party": false, "e": 119.152}, {"s": 119.152, "ly": "這就叫做——折射！", "ct": [119.272, 119.544, 119.816, 120.088, 120.36, 120.632, 120.904, 121.176, 121.448], "sec": "⭐ 副歌", "vis": "C_2", "party": false, "e": 121.6}, {"s": 121.6, "ly": "Snap! 折一下（折一下）", "ct": [121.72, 121.98, 122.24, 122.44, 122.72, 122.96, 123.2, 123.44, 123.56, 123.82], "sec": "⭐ 副歌", "vis": "SNAP1", "party": false, "e": 123.68}, {"s": 123.68, "ly": "Snap! 換方向（換方向）", "ct": [123.8, 124.06, 124.32, 124.48, 124.64, 124.82, 125.0, 125.28, 125.48, 125.74], "sec": "⭐ 副歌", "vis": "SNAP2", "party": false, "e": 125.84}, {"s": 125.84, "ly": "光沒有變彎彎 只是在水面", "ct": [125.96, 126.32, 126.48, 126.64, 126.8, 126.96, 127.12, 127.28, 127.6, 127.92, 128.18], "sec": "⭐ 副歌", "vis": "KINK", "party": false, "e": 128.35}, {"s": 128.35, "ly": "Snap! 折一下", "ct": [128.47, 128.76, 129.05, 129.34, 129.63], "sec": "⭐ 副歌", "vis": "SNAP3", "party": false, "e": 129.8}, {"s": 129.8, "ly": "一滴水 圓圓的 字變大", "ct": [129.92, 130.32, 130.84, 131.44, 131.72, 132.08, 132.48, 132.8, 133.04], "sec": "💧 主歌四", "vis": "V3_3", "party": false, "e": 133.52}, {"s": 133.52, "ly": "眼鏡 放大鏡 都在幫忙", "ct": [133.64, 133.92, 134.32, 134.56, 134.76, 135.04, 135.32, 135.6, 135.88], "sec": "💧 主歌四", "vis": "V3_2", "party": false, "e": 136.92}, {"s": 136.92, "ly": "光穿過去 換個方向", "ct": [137.04, 137.44, 137.76, 138.08, 138.56, 139.0, 139.32, 139.76], "sec": "💧 主歌四", "vis": "R_3", "party": false, "e": 140.32}, {"s": 140.32, "ly": "世界 一下子 看清楚啦", "ct": [140.44, 140.86, 141.28, 141.64, 142.04, 142.56, 143.0, 143.28, 143.54], "sec": "💧 主歌四", "vis": "R_3b", "party": false, "e": 144.04}, {"s": 144.04, "ly": null, "ct": [], "sec": "🎶 間奏・竹東動漫小劇場", "vis": "break", "party": true, "e": 147.94}, {"s": 147.94, "ly": "光走直線 直直往前衝", "ct": [148.06, 148.32, 148.54, 148.76, 148.98, 149.2, 149.36, 149.56, 149.76], "sec": "🎆 最後副歌", "vis": "CH_STRAIGHT", "party": true, "e": 149.92}, {"s": 149.92, "ly": "碰到水面 Snap! 折一下", "ct": [150.04, 150.24, 150.52, 150.76, 150.947, 151.133, 151.32, 151.6, 151.8], "sec": "🎆 最後副歌", "vis": "C_0", "party": true, "e": 151.96}, {"s": 151.96, "ly": "折一下 換方向 再繼續直直走", "ct": [152.08, 152.48, 152.64, 152.96, 153.2, 153.48, 153.76, 154.0, 154.16, 154.427, 154.693, 154.96], "sec": "🎆 最後副歌", "vis": "C_1", "party": true, "e": 155.2}, {"s": 155.2, "ly": "這就叫做——折射！", "ct": [155.32, 155.58, 155.84, 156.02, 156.2, 156.38, 156.56, 156.82, 157.08], "sec": "🎆 最後副歌", "vis": "C_2", "party": true, "e": 157.6}, {"s": 157.6, "ly": "Snap! 折一下（全班一起！）", "ct": [157.72, 157.98, 158.24, 158.48, 158.68, 158.86, 159.04, 159.24, 159.52, 159.72, 159.98, 160.24], "sec": "🎆 最後副歌", "vis": "SNAP1", "party": true, "e": 159.58}, {"s": 159.58, "ly": "Snap! 換方向（再大聲！）", "ct": [159.7, 159.96, 160.22, 160.48, 160.707, 160.933, 161.16, 161.36, 161.52, 161.78, 162.04], "sec": "🎆 最後副歌", "vis": "SNAP2", "party": true, "e": 161.82}, {"s": 161.82, "ly": "吸管沒有斷 是光在水面", "ct": [161.94, 162.2, 162.42, 162.64, 162.8, 163.2, 163.4, 163.62, 163.84, 164.12], "sec": "🎆 最後副歌", "vis": "C_3", "party": true, "e": 164.753}, {"s": 164.753, "ly": "Snap! 折一下", "ct": [164.873, 165.627, 166.38, 167.133, 167.887], "sec": "🎆 最後副歌", "vis": "SNAP3", "party": true, "e": 168.52}, {"s": 168.52, "ly": "光走直線……碰到水面……", "ct": [168.64, 168.96, 169.28, 169.48, 169.68, 169.88, 170.08, 170.36, 170.8, 171.24, 171.5, 171.76], "sec": "🎆 尾聲", "vis": "OUT1", "party": true, "e": 172.6}, {"s": 172.6, "ly": "全班：折一下！ Snap!", "ct": [172.72, 173.12, 173.44, 173.76, 174.0, 174.36, 174.62, 174.92, 175.22], "sec": "🎆 尾聲", "vis": "outro", "party": true, "e": 180.4}];
+const BPM=117.4438,BEAT=60/BPM;
+const beatOf=T=>(T-0.294)/BEAT;
+const pulse=B=>1+.06*Math.pow(1-(((B%1)+1)%1),3);
+
+/* ---------- 照片（真實照片） ---------- */
+function photo(parent,name,o){o=o||{};const g=el('g',{},parent);
+  const im=el('image',{href:'mv/'+name+'.jpg',x:0,y:0,width:1600,height:893,preserveAspectRatio:'xMidYMid slice'},g);
+  if(o.blur)im.setAttribute('filter','url(#bgblur)');
+  return {g,im,kb(lt,dur,z0,z1,cx,cy){const k=eio(clamp(lt/dur));const z=lerp(z0||1,z1||1.08,k);cx=cx==null?800:cx;cy=cy==null?446:cy;g.setAttribute('transform',`translate(${cx},${cy}) scale(${z}) translate(${-cx},${-cy})`);}};}
+function shade(parent,op,color){return el('rect',{x:0,y:0,width:1600,height:900,fill:color||'#020810',opacity:op},parent);}
+
+/* ---------- 霓虹字、徽章 ---------- */
+function kw(parent,text,x,y,size,color,rot){const g=el('g',{},parent);
+  const t=el('text',{x,y,'text-anchor':'middle','dominant-baseline':'central','font-family':'Noto Sans TC, sans-serif','font-weight':900,'font-size':size,fill:'#fff',stroke:color,'stroke-width':size*.075,'paint-order':'stroke',filter:'url(#neon)',transform:`rotate(${rot||0} ${x} ${y})`},g);
+  t.textContent=text;g.setAttribute('opacity',0);return g;}
+function hit(node,x,y,lt,t0,B){const k=back(seg(lt,t0,t0+.3));pop(node,x,y,k*(k>=1?pulse(B):1));}
+function tag(parent,x,y,label,color,size){size=size||40;const g=el('g',{},parent);const w=label.length*size*0.98+56;
+  el('rect',{x:x-w/2,y:y-size*.85,width:w,height:size*1.7,rx:size*.85,fill:color||'#0E2A40',stroke:'#fff','stroke-width':4,filter:'url(#drop)'},g);
+  txt(g,x,y+2,label,size,'#fff');g.setAttribute('opacity',0);return g;}
+function realBadge(parent){const g=el('g',{},parent);el('rect',{x:1342,y:24,width:236,height:56,rx:28,fill:'rgba(0,0,0,.55)',stroke:'#fff','stroke-opacity':.6,'stroke-width':2},g);txt(g,1460,53,'📷 真實照片',30,'#fff');return g;}
+
+/* ---------- 動漫效果：集中線、漫畫對話框 ---------- */
+function speedLines(parent,cx,cy,color){const g=el('g',{},parent);const ls=[];let s=3;
+  for(let i=0;i<46;i++){s=(s*9301+49297)%233280;const a=i/46*Math.PI*2+(s/233280)*.08;s=(s*9301+49297)%233280;const r0=300+(s/233280)*160;
+    const w=6+(i%4)*5;const p=el('path',{fill:color||'#fff',opacity:.9},g);ls.push({p,a,r0,w});}
+  return {g,set(k,lt){ls.forEach((o,i)=>{const r0=o.r0+(1-k)*400+Math.sin(lt*14+i)*20,r1=1500;const a=o.a,dw=o.w/r1;
+    const x1=cx+Math.cos(a-dw)*r1,y1=cy+Math.sin(a-dw)*r1,x2=cx+Math.cos(a+dw)*r1,y2=cy+Math.sin(a+dw)*r1,x0=cx+Math.cos(a)*r0,y0=cy+Math.sin(a)*r0;
+    o.p.setAttribute('d',`M${x0} ${y0} L${x1} ${y1} L${x2} ${y2}Z`);});g.setAttribute('opacity',k);}};}
+function shout(parent,x,y,text,size,fill){const g=el('g',{},parent);size=size||80;
+  const w=text.length*size*1.02+90,h=size*2.05;const pts=[];const N=22;
+  for(let i=0;i<N;i++){const a=i/N*Math.PI*2;const r=i%2?1:1.18;pts.push(`${x+Math.cos(a)*w/2*r},${y+Math.sin(a)*h/2*r}`);}
+  el('polygon',{points:pts.join(' '),fill:fill||'#FFFFFF',stroke:'#111','stroke-width':7,'stroke-linejoin':'round',filter:'url(#drop)'},g);
+  txt(g,x,y+3,text,size,'#111',{'font-weight':900});g.setAttribute('opacity',0);return g;}
+
+/* ---------- 「光光」原創動漫角色 ---------- */
+function mkKoko(parent){
+  const g=el('g',{},parent);const body=el('g',{},g);
+  el('circle',{cx:0,cy:0,r:150,fill:'#FFE27A',filter:'url(#blur)',opacity:.65},body);
+  const pts=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i/10*Math.PI*2;const r=i%2?78:112;pts.push(`${Math.cos(a)*r},${Math.sin(a)*r}`);}
+  el('polygon',{points:pts.join(' '),fill:grad(body,[[0,'#FFFBE0'],[.55,'#FFE14D'],[1,'#FFB21E']],true,{cx:'40%',cy:'35%'}),stroke:'#E58A00','stroke-width':6,'stroke-linejoin':'round'},body);
+  const eyes=el('g',{},body);
+  [[-30,1],[30,1]].forEach(([x])=>{const e=el('g',{},eyes);
+    el('ellipse',{cx:x,cy:-4,rx:17,ry:25,fill:'#2B1B4A'},e);
+    el('ellipse',{cx:x,cy:4,rx:13,ry:15,fill:grad(e,[[0,'#7A5CFF'],[1,'#2CE6FF']],false,{x1:0,y1:0,x2:0,y2:1})},e);
+    el('ellipse',{cx:x-6,cy:-13,rx:7,ry:9,fill:'#fff'},e);el('circle',{cx:x+6,cy:8,r:3.5,fill:'#fff'},e);});
+  el('ellipse',{cx:-56,cy:26,rx:15,ry:8,fill:'#FF8FB0',opacity:.8},body);el('ellipse',{cx:56,cy:26,rx:15,ry:8,fill:'#FF8FB0',opacity:.8},body);
+  const mouth=el('path',{d:'M-12 30 Q0 44 12 30',fill:'#B03050',stroke:'#5A1630','stroke-width':4,'stroke-linejoin':'round'},body);
+  const armL=el('path',{d:'M-80 30 q-30 10 -40 -14',fill:'none',stroke:'#E58A00','stroke-width':12,'stroke-linecap':'round'},body);
+  const armR=el('path',{d:'M80 30 q30 10 40 -14',fill:'none',stroke:'#E58A00','stroke-width':12,'stroke-linecap':'round'},body);
+  const spk=el('g',{},g);[[-140,-90],[150,-70],[120,110],[-150,100]].forEach(([x,y],i)=>{el('path',{d:`M${x} ${y-22} L${x+6} ${y-6} L${x+22} ${y} L${x+6} ${y+6} L${x} ${y+22} L${x-6} ${y+6} L${x-22} ${y} L${x-6} ${y-6}Z`,fill:i%2?'#2CE6FF':'#FFFFFF'},spk);});
+  return {g,set(o){const t=o.t||0,s=o.s||1;g.setAttribute('transform',`translate(${o.x},${o.y+Math.sin(t*3)*10}) rotate(${o.rot||Math.sin(t*2)*6}) scale(${s})`);
+    const blink=(t%2.9)<.13?.12:1;eyes.setAttribute('transform',`translate(0,${-4*(1-blink)}) scale(1,${blink})`);
+    const w=o.wave?Math.sin(t*10)*30:0;armL.setAttribute('transform',`rotate(${-w} -80 30)`);armR.setAttribute('transform',`rotate(${w} 80 30)`);
+    mouth.setAttribute('d',o.wow?'M-12 28 Q0 56 12 28 Q0 34 -12 28Z':'M-12 30 Q0 44 12 30');
+    spk.setAttribute('opacity',.5+.5*Math.sin(t*6));spk.setAttribute('transform',`rotate(${t*20})`);}};}
+
+/* ---------- 畫的珍奶杯（寫實風） ---------- */
+function mkBoba(parent){
+  const g=el('g',{},parent);
+  const W1=330,W2=250,H=560,LT=150;
+  const cup=`M${-W1/2} 0 L${W1/2} 0 L${W2/2} ${H} Q0 ${H+18} ${-W2/2} ${H}Z`;
+  el('ellipse',{cx:0,cy:H+16,rx:W2*.75,ry:22,fill:'#000',opacity:.35,filter:'url(#soft)'},g);
+  const cid=gid();const cp=el('clipPath',{id:cid},g);el('path',{d:cup},cp);
+  const aid=gid();const ac=el('clipPath',{id:aid},g);el('rect',{x:-900,y:-1500,width:1800,height:1500+LT},ac);
+  const bid=gid();const bc=el('clipPath',{id:bid},g);el('rect',{x:-900,y:LT,width:1800,height:1500},bc);
+  const strawCol=grad(g,[[0,'#F06A9E'],[.45,'#FFD1E3'],[1,'#E0507F']],false,{x1:0,y1:0,x2:1,y2:0});
+  const sw=34,len=760;
+  function straw(p){el('rect',{x:-sw/2,y:-len,width:sw,height:len,rx:sw/2,fill:strawCol,stroke:'#B8406C','stroke-width':3},p);el('rect',{x:-sw/2+6,y:-len+12,width:7,height:len-24,rx:3,fill:'#fff',opacity:.5},p);}
+  // 奶茶（在杯子裡）
+  const inner=el('g',{'clip-path':`url(#${cid})`},g);
+  el('rect',{x:-W1/2,y:LT,width:W1,height:H,fill:grad(g,[[0,'#F7C873'],[.5,'#E39A3B'],[1,'#B5651D']],false,{x1:0,y1:0,x2:0,y2:1}),opacity:.55},inner);
+  el('rect',{x:-W1/2,y:LT,width:W1,height:H,fill:grad(g,[[0,'#fff',0],[.2,'#fff',.22],[.34,'#fff',0],[.8,'#000',0],[1,'#000',.28]],false)},inner);
+  let s=5;
+  for(let i=0;i<64;i++){s=(s*9301+49297)%233280;const x=-W2/2+20+(s/233280)*(W2-40);s=(s*9301+49297)%233280;const y=H-18-(s/233280)*118;
+    const pg=el('g',{},inner);el('circle',{cx:x,cy:y,r:17,fill:grad(pg,[[0,'#6E4C3B'],[.5,'#2A1610'],[1,'#110704']],true,{cx:'35%',cy:'30%'})},pg);el('ellipse',{cx:x-6,cy:y-7,rx:5,ry:3.5,fill:'#fff',opacity:.55},pg);}
+  // 奶茶裡的吸管（被看起來移位）
+  const botWrap=el('g',{'clip-path':`url(#${bid})`},inner);const botS=el('g',{},botWrap);straw(botS);
+  el('rect',{x:-W1/2,y:LT,width:W1,height:H,fill:'#D98A2B',opacity:.3},inner);
+  el('ellipse',{cx:0,cy:LT,rx:W1/2-6,ry:12,fill:'#FFE2A8',opacity:.75},inner);
+  // 空氣中的吸管
+  const topWrap=el('g',{'clip-path':`url(#${aid})`},g);const topS=el('g',{},topWrap);straw(topS);
+  // 杯子光澤＋封膜
+  el('path',{d:cup,fill:grad(g,[[0,'#fff',.32],[.12,'#fff',.06],[.5,'#fff',0],[.88,'#fff',.08],[1,'#fff',.3]],false),stroke:'#E8F4FF','stroke-width':5,'stroke-opacity':.85},g);
+  el('path',{d:`M${-W1/2+34} 24 L${-W2/2+30} ${H-34}`,stroke:'#fff','stroke-width':16,'stroke-linecap':'round',opacity:.32},g);
+  el('ellipse',{cx:0,cy:0,rx:W1/2+6,ry:20,fill:grad(g,[[0,'#FFFFFF',.9],[1,'#DDE8F0',.9]],false),stroke:'#B9C8D6','stroke-width':4},g);
+  el('ellipse',{cx:0,cy:0,rx:W1/2-30,ry:12,fill:'none',stroke:'#FF7AA8','stroke-width':4,'stroke-dasharray':'10 8'},g);
+  txt(g,0,96,'珍珠紅茶',34,'#7A4A22',{opacity:.7});
+  // 斷掉的地方（提示圈）
+  const ring=el('ellipse',{cx:44,cy:LT,rx:90,ry:64,fill:'none',stroke:'#FF3F6E','stroke-width':9,'stroke-dasharray':'18 12',opacity:0},g);
+  return {g,ring,LT,set(o){
+    const tipX=-70,tipY=lerp(-260,H-60,o.depth)-o.up*(H+200);
+    const tr=`translate(${tipX},${tipY}) rotate(14)`;
+    topS.setAttribute('transform',tr);
+    botS.setAttribute('transform',`translate(${o.bend*56},0) ${tr}`);
+    botWrap.setAttribute('opacity',o.up>.9?0:1);}};
+}
+
+/* ================= 場景 ================= */
+function chorusBase(g,name,o){const p=photo(g,name);shade(g,o&&o.shade!=null?o.shade:.25);realBadge(g);return p;}
+function snapScene(g,S,word,n){
+  const p=photo(g,'laser');shade(g,.3);realBadge(g);
+  const sl=speedLines(g,688,365,n===2?'#B6FFC8':'#FFE14D');
+  const sn=kw(g,'🫰 SNAP!',1180,170,150,'#FF3FB0',-5);sn.querySelector('text').setAttribute('font-family','Bungee, Noto Sans TC, sans-serif');
+  const w=kw(g,word,1220,430,140,'#14B8E6',3);
+  const ring=el('circle',{cx:690,cy:364,r:80,fill:'none',stroke:'#FF3FB0','stroke-width':9,opacity:0},p.g);const dot=el('circle',{cx:690,cy:364,r:18,fill:'#fff',opacity:0},p.g);
+  return (lt,B)=>{p.kb(lt,2,1.12,1.0,690,364);sl.set(seg(lt,S.c(0),S.c(0)+.12)*(1-seg(lt,S.c(0)+.5,S.c(0)+.9))*.6,lt);hit(sn,1180,170,lt,S.c(0),B);hit(w,1220,430,lt,S.c(2),B);
+    const r=seg(lt,S.c(2),S.c(2)+.25);ring.setAttribute('opacity',r*(.6+.4*Math.sin(lt*12)));ring.setAttribute('r',80+20*Math.sin(lt*8));dot.setAttribute('opacity',r);};}
+function mirrorScene(g,S,water){
+  const p=photo(g,water?'laser':'mirror');shade(g,water?.2:.15);realBadge(g);
+  let s1,s2;
+  if(water){s1=el('line',{x1:0,y1:-2,x2:690,y2:364,stroke:'#FFF27A','stroke-width':12,'stroke-linecap':'round','stroke-linejoin':'round',filter:'url(#neon)',pathLength:1,'stroke-dasharray':1,'stroke-dashoffset':1,opacity:.9},p.g);s2=el('line',{x1:690,y1:364,x2:1150,y2:842,stroke:'#FFF27A','stroke-width':12,'stroke-linecap':'round','stroke-linejoin':'round',filter:'url(#neon)',pathLength:1,'stroke-dasharray':1,'stroke-dashoffset':1,opacity:.9},p.g);}
+  else{s1=el('line',{x1:240,y1:60,x2:815,y2:350,stroke:'#FFF27A','stroke-width':12,'stroke-linecap':'round','stroke-linejoin':'round',filter:'url(#neon)',pathLength:1,'stroke-dasharray':1,'stroke-dashoffset':1,opacity:.9},p.g);s2=el('line',{x1:815,y1:350,x2:1390,y2:60,stroke:'#FFF27A','stroke-width':12,'stroke-linecap':'round','stroke-linejoin':'round',filter:'url(#neon)',pathLength:1,'stroke-dasharray':1,'stroke-dashoffset':1,opacity:.9},p.g);}
+  const hx=water?690:815,hy=water?364:350;const dot=el('circle',{cx:hx,cy:hy,r:18,fill:'#fff',opacity:0},p.g);
+  const t=kw(g,water?'折射':'反射',water?1250:800,water?170:180,130,water?'#FF3FB0':'#14B8E6',-3);
+  const l=tag(g,water?1150:800,water?620:650,water?'碰到水面 → 穿進去・折一下':'碰到鏡子 → 彈回來','#0E2A40',50);
+  return (lt,B)=>{p.kb(lt,2,1,1.05,hx,hy);hit(t,water?1250:800,water?170:180,lt,S.c(0),B);s1.setAttribute('stroke-dashoffset',1-eo(seg(lt,S.c(0),S.c(4))));dot.setAttribute('opacity',seg(lt,S.c(4),S.c(4)+.1));
+    s2.setAttribute('stroke-dashoffset',1-eo(seg(lt,S.c(5),S.c(7)+.3)));hit(l,water?1150:800,water?620:650,lt,S.c(5),B);};}
+const VIS={
+  /* ===== 新歌〈折一下 Snap!〉新增場景 ===== */
+  NOT1(g,S){
+    const p=photo(g,'straw');shade(g,.35);realBadge(g);
+    const q=kw(g,'吸管壞掉？',800,200,120,'#14B8E6',-3);
+    const x=kw(g,'✗',1180,470,330,'#E8283C',0);
+    return (lt,B)=>{p.kb(lt,4,1.02,1.1);hit(q,800,200,lt,S.c(0),B);hit(x,1180,470,lt,S.c(4),B);};},
+  NOT2(g,S){
+    const p=photo(g,'glass',{blur:1});shade(g,.45);
+    const k=mkKoko(g);const q=kw(g,'眼睛不好？',800,190,120,'#FF3FB0',3);
+    const x=kw(g,'✗',1180,480,330,'#E8283C',0);
+    return (lt,B)=>{p.kb(lt,4,1.06,1.0);k.set({x:520,y:560,t:lt,s:1.05,wow:lt>S.c(4)});hit(q,800,190,lt,S.c(0),B);hit(x,1180,480,lt,S.c(4),B);};},
+  CH_STRAIGHT(g,S){
+    const p=photo(g,'stage');shade(g,.12);realBadge(g);
+    const sl=speedLines(g,800,450,'#FFFFFF');
+    const t=kw(g,'光走直線！',800,150,140,'#FFB400',-3);const t2=tag(g,800,640,'舞台燈的光束＝一條條直線','#0E2A40',46);
+    return (lt,B)=>{p.kb(lt,2.2,1.0,1.08,800,520);sl.set(seg(lt,S.c(5),S.c(5)+.2)*(1-seg(lt,S.c(5)+.5,S.c(5)+.9))*.4,lt);hit(t,800,150,lt,S.c(0),B);hit(t2,800,640,lt,S.c(5),B);};},
+  SNAP1(g,S){return snapScene(g,S,'折一下',1);},
+  SNAP2(g,S){return snapScene(g,S,'換方向',2);},
+  SNAP3(g,S){return snapScene(g,S,'折一下',3);},
+  KINK(g,S){
+    el('rect',{x:0,y:0,width:1600,height:900,fill:'#05101A'},g);
+    const P=(x0,ok)=>{const pg=el('g',{},g);const id=gid();const c=el('clipPath',{id},pg);el('rect',{x:x0,y:110,width:740,height:640,rx:22},c);
+      const inner=el('g',{'clip-path':`url(#${id})`},pg);
+      el('image',{href:'mv/laser.jpg',x:x0-330,y:110-170,width:1600*.93,height:893*.93,preserveAspectRatio:'xMidYMid slice'},inner);
+      if(!ok)el('rect',{x:x0,y:110,width:740,height:640,fill:'#000',opacity:.45},inner);
+      el('rect',{x:x0,y:110,width:740,height:640,rx:22,fill:'none',stroke:ok?'#2FB36E':'#E8283C','stroke-width':8},pg);
+      const sx=x0-330,sy=-60,k=.93;const P0=[sx+0*k,sy-2*k],P1=[sx+690*k,sy+364*k],P2=[sx+1150*k,sy+842*k];
+      const d=ok?`M${P0[0]} ${P0[1]} L${P1[0]} ${P1[1]} L${P2[0]} ${P2[1]}`:`M${P0[0]} ${P0[1]} Q${P1[0]+120} ${P1[1]-120} ${P2[0]} ${P2[1]}`;
+      const path=el('path',{d,fill:'none',stroke:ok?'#FFF27A':'#FF4D5E','stroke-width':12,'stroke-linecap':'round','stroke-linejoin':'round',filter:'url(#neon)',pathLength:1,'stroke-dasharray':1,'stroke-dashoffset':1},inner);
+      if(ok)el('circle',{cx:P1[0],cy:P1[1],r:15,fill:'#fff'},inner);return path;};
+    const a=P(40,false),b=P(820,true);
+    const xa=kw(g,'彎彎的？ ✗',410,60,58,'#E8283C',0),xb=kw(g,'真的照片：在水面折一下 ✓',1190,60,50,'#1E9A58',0);
+    return (lt,B)=>{a.setAttribute('stroke-dashoffset',1-eo(seg(lt,S.c(0),S.c(5))));hit(xa,410,60,lt,S.c(4),B);
+      b.setAttribute('stroke-dashoffset',1-eo(seg(lt,S.c(6),S.c(10))));hit(xb,1190,60,lt,S.c(8),B);};},
+  KINK2(g,S){
+    const p=photo(g,'laser');shade(g,.15);realBadge(g);
+    const s1=el('line',{x1:0,y1:-2,x2:690,y2:364,stroke:'#FFF27A','stroke-width':12,'stroke-linecap':'round','stroke-linejoin':'round',filter:'url(#neon)',pathLength:1,'stroke-dasharray':1,'stroke-dashoffset':1,opacity:.9},p.g);
+    const s2=el('line',{x1:690,y1:364,x2:1150,y2:842,stroke:'#FFF27A','stroke-width':12,'stroke-linecap':'round','stroke-linejoin':'round',filter:'url(#neon)',pathLength:1,'stroke-dasharray':1,'stroke-dashoffset':1,opacity:.9},p.g);
+    const dot=el('circle',{cx:690,cy:364,r:20,fill:'#fff',opacity:0},p.g);const ring=el('circle',{cx:690,cy:364,r:70,fill:'none',stroke:'#FF3FB0','stroke-width':8,opacity:0},p.g);
+    const l1=kw(g,'直線',300,330,90,'#14B8E6',0),l2=kw(g,'折一下！',1080,330,100,'#FF3FB0',-4),l3=kw(g,'直線',1250,700,90,'#14B8E6',0);
+    return (lt,B)=>{p.kb(lt,2,1,1.04,688,365);s1.setAttribute('stroke-dashoffset',1-eo(seg(lt,S.c(0),S.c(2))));dot.setAttribute('opacity',seg(lt,S.c(2),S.c(2)+.15));ring.setAttribute('opacity',seg(lt,S.c(2),S.c(2)+.15)*(.6+.4*Math.sin(lt*12)));
+      s2.setAttribute('stroke-dashoffset',1-eo(seg(lt,S.c(5),S.c(6)+.2)));hit(l1,300,330,lt,S.c(0),B);hit(l2,1080,330,lt,S.c(2),B);hit(l3,1250,700,lt,S.c(5),B);};},
+  ROAD(g,S){
+    const p=photo(g,'street');shade(g,.25);realBadge(g);const sl=speedLines(g,800,450,'#FFFFFF');
+    const t=kw(g,'🛣️ 柏油路',800,170,130,'#14B8E6',-3);const t2=tag(g,800,640,'空氣＝光跑超快','#0E2A40',56);
+    return (lt,B)=>{p.kb(lt,2,1.0,1.12,900,600);sl.set(.4,lt);hit(t,800,170,lt,S.c(0),B);hit(t2,800,640,lt,S.c(3),B);};},
+  SAND(g,S){
+    const p=photo(g,'beach');shade(g,.18);realBadge(g);
+    const t=kw(g,'🏖️ 沙灘',800,170,130,'#E39A3B',3);const t2=tag(g,800,640,'水＝光變慢了','#7A4A12',56);
+    return (lt,B)=>{p.kb(lt,2.2,1.1,1.02,700,600);hit(t,800,170,lt,S.c(0),B);hit(t2,800,640,lt,S.c(3),B);};},
+  MARCH(g,S){
+    const top=el('g',{},g);const id1=gid();const c1=el('clipPath',{id:id1},g);el('rect',{x:0,y:0,width:1600,height:430},c1);top.setAttribute('clip-path',`url(#${id1})`);photo(top,'street');
+    const bot=el('g',{},g);const id2=gid();const c2=el('clipPath',{id:id2},g);el('rect',{x:0,y:430,width:1600,height:470},c2);bot.setAttribute('clip-path',`url(#${id2})`);photo(bot,'beach');
+    shade(g,.2);el('line',{x1:0,y1:430,x2:1600,y2:430,stroke:'#fff','stroke-width':6},g);realBadge(g);
+    txt(g,1380,110,'柏油路（空氣）',44,'#fff',{stroke:'#000','stroke-width':7,'paint-order':'stroke'});txt(g,1400,490,'沙灘（水）',44,'#FFE9B0',{stroke:'#000','stroke-width':7,'paint-order':'stroke'});
+    const tr1=el('path',{fill:'none',stroke:'#FFE14D','stroke-width':6,'stroke-dasharray':'12 10',opacity:.9},g),tr2=el('path',{fill:'none',stroke:'#FF3FB0','stroke-width':6,'stroke-dasharray':'12 10',opacity:.9},g);
+    const bar=el('line',{stroke:'#fff','stroke-width':12,'stroke-linecap':'round'},g);
+    const A=el('circle',{r:34,fill:'#FFE14D',stroke:'#111','stroke-width':5},g),Bc=el('circle',{r:34,fill:'#FF3FB0',stroke:'#111','stroke-width':5},g);
+    const t1=tag(g,1100,600,'先踩到沙 → 先變慢','#7A4A12',44);const t2=kw(g,'方向換了！',1150,300,110,'#FF3FB0',-4);
+    const th1=40*Math.PI/180,th2=22*Math.PI/180,v2=.55,Y=430;
+    const pos=(x0,y0,u)=>{const d1=[Math.sin(th1),Math.cos(th1)],d2=[Math.sin(th2),Math.cos(th2)];const tb=(Y-y0)/d1[1];
+      if(u<=tb)return [x0+d1[0]*u,y0+d1[1]*u];const r=(u-tb)*v2;return [x0+d1[0]*tb+d2[0]*r,Y+d2[1]*r];};
+    const Lx=170,Ly=200,Rx=Lx+220*Math.cos(th1),Ry=Ly-220*Math.sin(th1);
+    return (lt,B)=>{const u=lerp(0,900,seg(lt,0,S.c(13)||5.5));const a=pos(Lx,Ly,u),b=pos(Rx,Ry,u);
+      A.setAttribute('cx',a[0]);A.setAttribute('cy',a[1]);Bc.setAttribute('cx',b[0]);Bc.setAttribute('cy',b[1]);
+      bar.setAttribute('x1',a[0]);bar.setAttribute('y1',a[1]);bar.setAttribute('x2',b[0]);bar.setAttribute('y2',b[1]);
+      let d1='M'+Lx+' '+Ly,d2='M'+Rx+' '+Ry;for(let q=0;q<=u;q+=16){const pa=pos(Lx,Ly,q),pb=pos(Rx,Ry,q);d1+=` L${pa[0]} ${pa[1]}`;d2+=` L${pb[0]} ${pb[1]}`;}tr1.setAttribute('d',d1);tr2.setAttribute('d',d2);
+      hit(t1,1100,600,lt,S.c(2),B);hit(t2,1150,300,lt,S.c(10),B);};},
+  REFL(g,S){return mirrorScene(g,S,false);},
+  REFR(g,S){return mirrorScene(g,S,true);},
+  SAFE(g,S){
+    const p=photo(g,'pool');shade(g,.45);realBadge(g);const k=mkKoko(g);
+    const t=kw(g,'安全口令！',800,160,110,'#FFB400',-3);const a=tag(g,800,420,'① 先看深度','#0E5A8A',64);const b=tag(g,800,600,'② 大人在旁','#1E7A48',64);
+    return (lt,B)=>{p.kb(lt,4,1.02,1.08);hit(t,800,160,lt,.1,B);hit(a,800,420,lt,S.c(0),B);hit(b,800,600,lt,S.c(4),B);k.set({x:1380,y:720,t:lt,s:.7,wave:true});};},
+  FLOAT(g,S){
+    const p=photo(g,'pool');shade(g,.4);realBadge(g);
+    const fl=el('g',{},g);el('ellipse',{cx:0,cy:0,rx:230,ry:46,fill:'#FFE14D',stroke:'#111','stroke-width':6},fl);el('circle',{cx:-250,cy:-12,r:52,fill:'#FFE14D',stroke:'#111','stroke-width':6},fl);
+    el('path',{d:'M-268 -20 q18 14 36 0',fill:'none',stroke:'#111','stroke-width':5,'stroke-linecap':'round'},fl);el('path',{d:'M-300 40 Q0 80 300 40',fill:'none',stroke:'#9FE3FF','stroke-width':10,'stroke-linecap':'round',opacity:.9},fl);
+    const t=kw(g,'仰漂！',800,170,150,'#14B8E6',-3);const a=tag(g,520,700,'臉朝上・放輕鬆','#0E5A8A',50);const b=tag(g,1100,700,'口鼻露出來・等救援','#1E7A48',50);const c=shout(g,1280,330,'別慌張！',64,'#FFE14D');
+    return (lt,B)=>{fl.setAttribute('transform',`translate(800,${470+Math.sin(lt*2.2)*10}) rotate(${Math.sin(lt*1.6)*2})`);
+      hit(t,800,170,lt,S.c(4),B);hit(a,520,700,lt,S.c(5),B);hit(b,1100,700,lt,S.c(7),B);hit(c,1280,330,lt,S.c(8),B);};},
+  OUT1(g,S){
+    const p=photo(g,'laser');shade(g,.45);realBadge(g);
+    const s1=el('line',{x1:0,y1:-2,x2:690,y2:364,stroke:'#FFE14D','stroke-width':16,'stroke-linecap':'round',filter:'url(#neon)',pathLength:1,'stroke-dasharray':1,'stroke-dashoffset':1},g);
+    const s2=el('line',{x1:690,y1:364,x2:1150,y2:842,stroke:'#FFE14D','stroke-width':16,'stroke-linecap':'round',filter:'url(#neon)',pathLength:1,'stroke-dasharray':1,'stroke-dashoffset':1},g);
+    const t=kw(g,'光走直線……',420,620,90,'#14B8E6',0),t2=kw(g,'碰到水面……',1220,220,90,'#FF3FB0',0);
+    return (lt,B)=>{s1.setAttribute('stroke-dashoffset',1-eo(seg(lt,S.c(0),S.c(5))));s2.setAttribute('stroke-dashoffset',1-eo(seg(lt,S.c(8),S.c(12)+.6)));hit(t,420,620,lt,S.c(0),B);hit(t2,1220,220,lt,S.c(7),B);};},
+  CREEK(g,S){
+    const p=photo(g,'lake');shade(g,.12);realBadge(g);
+    const t=kw(g,'清清的溪水',800,150,110,'#14B8E6',-3);const k=kw(g,'看起來淺 → 其實更深！',800,420,84,'#FF3F6E',2);
+    const w=tag(g,800,640,'⚠️ 別一看就跳下去！','#B3122E',56);
+    return (lt,B)=>{p.kb(lt,4.6,1.0,1.1,800,600);hit(t,800,150,lt,S.c(0),B);hit(k,800,420,lt,S.c(4),B);hit(w,800,640,lt,S.c(8),B);};},
+  R_3b(g,S){
+    const p=photo(g,'magnifier');shade(g,.2);realBadge(g);
+    const k=kw(g,'看清楚啦 ✨',1150,200,120,'#FFB400',-4);const sl=speedLines(g,800,450,'#FFFFFF');
+    return (lt,B)=>{p.kb(lt,3,1.15,1.0);sl.set(seg(lt,S.c(2),S.c(2)+.2)*.35,lt);hit(k,1150,200,lt,S.c(3),B);};},
+  title(g){
+    const p=photo(g,'train');shade(g,.45);
+    const sl=speedLines(g,800,430,'#FFFFFF');
+    const k=mkKoko(g);
+    const chars=[...'折一下'];const xs=i=>800+(i-1)*240;
+    const nodes=chars.map((c,i)=>kw(g,c,xs(i),360,190,i%2?'#FF3FB0':'#14B8E6',0));
+    const sub=kw(g,'光線特勤隊・任務四　折射 MV',800,540,64,'#FFB400');
+    const t1=tag(g,330,170,'🚂 家鄉站！內灣線小火車','#B23A2A',38);const snp=kw(g,'🫰 SNAP!',1180,560,96,'#FF3FB0',-6);snp.querySelector('text').setAttribute('font-family','Bungee, Noto Sans TC, sans-serif');
+    return (lt,B)=>{p.kb(lt,9.2,1.02,1.14,1100,500);
+      sl.set(seg(lt,3.5,4.2)*(1-seg(lt,6.4,7))*.55,lt);
+      nodes.forEach((n,i)=>{const t0=2.2+i*.42;const k2=back(seg(lt,t0,t0+.3));pop(n,xs(i),360,k2*(lt>7?pulse(B):1));});
+      sub.setAttribute('opacity',seg(lt,4.6,5.2));
+      hit(t1,330,170,lt,.6,B);hit(snp,1180,560,lt,9.0,B);
+      k.set({x:lerp(1800,1330,eo(seg(lt,5.8,7))),y:700,t:lt,s:.9,wave:lt>7});
+      setCue(lt<5?'🎧 準備好了嗎？':lt<8.9?'🎤 Yeah—折射偵探，上線':'🫰 Snap! Snap!');};},
+  V1_0(g,S){
+    el('rect',{x:0,y:0,width:1600,height:900,fill:grad(g,[[0,'#FFF4E4'],[1,'#E8C9A0']],false,{x1:0,y1:0,x2:0,y2:1})},g);
+    el('rect',{x:0,y:690,width:1600,height:210,fill:grad(g,[[0,'#C08A55'],[1,'#8A5A30']],false,{x1:0,y1:0,x2:0,y2:1})},g);
+    const b=mkBoba(g);b.g.setAttribute('transform','translate(800,150)');
+    const t1=tag(g,330,200,'🧋 台灣手搖飲','#8A4A1E',48);const k=kw(g,'插吸管！',1260,300,110,'#FF3FB0',-6);
+    return (lt,B)=>{b.set({depth:eo(seg(lt,S.c(4)-.2,S.c(6))),bend:1,up:0});hit(t1,330,200,lt,S.c(0),B);hit(k,1260,300,lt,S.c(4),B);};},
+  V1_1(g,S){
+    const wrap=el('g',{},g);
+    el('rect',{x:0,y:0,width:1600,height:900,fill:grad(wrap,[[0,'#FFF4E4'],[1,'#E8C9A0']],false,{x1:0,y1:0,x2:0,y2:1})},wrap);
+    el('rect',{x:0,y:690,width:1600,height:210,fill:'#A87245'},wrap);
+    const b=mkBoba(wrap);b.g.setAttribute('transform','translate(800,150)');b.set({depth:1,bend:1,up:0});
+    const sl=speedLines(g,844,300,'#111');
+    const sh=shout(g,1230,190,'咦？！斷一半？',62,'#FFFFFF');
+    return (lt,B)=>{const z=lerp(1,1.9,eio(seg(lt,0,1.2)));wrap.setAttribute('transform',`translate(844,300) scale(${z}) translate(-844,-300)`);
+      b.ring.setAttribute('opacity',seg(lt,S.c(2),S.c(2)+.2));
+      sl.set(seg(lt,S.c(4)-.1,S.c(4)+.15)*.5,lt);hit(sh,1230,190,lt,S.c(4),B);};},
+  V1_2(g,S){
+    el('rect',{x:0,y:0,width:1600,height:900,fill:grad(g,[[0,'#FFF4E4'],[1,'#E8C9A0']],false,{x1:0,y1:0,x2:0,y2:1})},g);
+    el('rect',{x:0,y:690,width:1600,height:210,fill:'#A87245'},g);
+    const b=mkBoba(g);b.g.setAttribute('transform','translate(560,150) scale(.85)');
+    const col=grad(g,[[0,'#F06A9E'],[.45,'#FFD1E3'],[1,'#E0507F']],false,{x1:0,y1:0,x2:0,y2:1});
+    const ly=el('g',{opacity:0},g);
+    el('ellipse',{cx:0,cy:26,rx:330,ry:12,fill:'#000',opacity:.25,filter:'url(#soft)'},ly);
+    el('rect',{x:-320,y:-17,width:640,height:34,rx:17,fill:col,stroke:'#B8406C','stroke-width':3},ly);
+    el('rect',{x:-308,y:-11,width:616,height:7,rx:3,fill:'#fff',opacity:.5},ly);
+    const guide=el('line',{x1:-360,y1:-40,x2:360,y2:-40,stroke:'#2FB36E','stroke-width':8,'stroke-dasharray':'20 14',opacity:0},ly);
+    const ok=kw(g,'✓ 沒斷！直直的',1150,250,96,'#2FB36E',-4);
+    return (lt,B)=>{const up=eio(seg(lt,S.c(0),S.c(2)));b.set({depth:1,bend:1-up,up:up*1.2});
+      const d=eo(seg(lt,S.c(2),S.c(3)+.2));ly.setAttribute('opacity',d);ly.setAttribute('transform',`translate(${lerp(700,1110,d)},${lerp(260,640,d)}) rotate(${lerp(16,0,d)}) scale(.8)`);
+      guide.setAttribute('opacity',seg(lt,S.c(4),S.c(4)+.3));hit(ok,1150,250,lt,S.c(4),B);};},
+  V1_3(g,S){
+    const p=photo(g,'straw');shade(g,.12);realBadge(g);
+    const ray=el('path',{d:'M880 652 L1104 340 L1520 70',fill:'none',stroke:'#FFE14D','stroke-width':14,'stroke-linecap':'round','stroke-linejoin':'round',filter:'url(#neon)',pathLength:1,'stroke-dasharray':1,'stroke-dashoffset':1},g);
+    el('line',{x1:1104,y1:220,x2:1104,y2:470,stroke:'#fff','stroke-width':4,'stroke-dasharray':'12 10',opacity:.8},g);
+    const sp=el('circle',{cx:1104,cy:340,r:22,fill:'#FFE14D',filter:'url(#neon)',opacity:0},g);
+    const k=kw(g,'光在水面折一下 ↗',420,200,96,'#FFB400',-4);const t1=tag(g,420,600,'水面＝折一下的地方','#0E5A8A',44);
+    return (lt,B)=>{p.kb(lt,5,1,1.06,1104,340);ray.setAttribute('stroke-dashoffset',1-eo(seg(lt,S.c(0),S.c(5))));sp.setAttribute('opacity',seg(lt,S.c(3),S.c(3)+.2)*(.6+.4*Math.sin(lt*10)));
+      hit(k,420,200,lt,S.c(4),B);hit(t1,420,600,lt,S.c(2),B);};},
+  C_0(g,S){
+    const p=chorusBase(g,'laser',.05);
+    const dot=el('circle',{r:26,fill:'#EFFFF2',filter:'url(#neon)'},g);
+    const a=kw(g,'空氣',300,420,90,'#2CE6FF',0);const w=kw(g,'水',820,610,110,'#2FB36E',0);
+    return (lt,B)=>{p.kb(lt,4.6,1,1.05,688,365);
+      const k=seg(lt,S.c(0),S.c(6));let x,y;if(k<.5){const q=k/.5;x=lerp(0,690,q);y=lerp(-2,364,q);}else{const q=(k-.5)/.5;x=lerp(690,1150,q);y=lerp(364,842,q);}
+      dot.setAttribute('cx',x);dot.setAttribute('cy',y);dot.setAttribute('opacity',lt<S.c(0)?0:1);
+      hit(a,300,420,lt,S.c(1),B);hit(w,820,610,lt,S.c(5),B);};},
+  C_1(g,S){
+    const zoom=el('g',{},g);const p=photo(zoom,'laser');realBadge(g);
+    const nl=el('line',{x1:688,y1:150,x2:688,y2:600,stroke:'#fff','stroke-width':5,'stroke-dasharray':'14 10',opacity:0},zoom);
+    const arc1=el('path',{d:'M688 230 A135 135 0 0 0 576 305',fill:'none',stroke:'#FFE14D','stroke-width':8,opacity:0},zoom);
+    const arc2=el('path',{d:'M688 500 A135 135 0 0 0 786 468',fill:'none',stroke:'#FF3FB0','stroke-width':8,opacity:0},zoom);
+    const k=kw(g,'折一下！',1250,250,140,'#FF3FB0',-8);const sl=speedLines(g,800,450,'#FFFFFF');
+    return (lt,B)=>{const z=lerp(1,1.45,eio(seg(lt,0,1)));zoom.setAttribute('transform',`translate(688,365) scale(${z}) translate(-688,-365)`);
+      nl.setAttribute('opacity',seg(lt,S.c(2),S.c(2)+.3));arc1.setAttribute('opacity',seg(lt,S.c(3),S.c(3)+.3));arc2.setAttribute('opacity',seg(lt,S.c(4),S.c(4)+.3));
+      sl.set(seg(lt,S.c(4),S.c(4)+.15)*(1-seg(lt,S.c(6),S.c(6)+.6))*.4,lt);hit(k,1250,250,lt,S.c(4),B);};},
+  C_2(g,S){
+    const p=photo(g,'laser',{blur:1});shade(g,.45);
+    const sl=speedLines(g,800,400,'#FFE14D');
+    const big=[...'折射'].map((c,i)=>kw(g,c,640+i*320,380,300,i?'#FF3FB0':'#14B8E6',i?6:-6));
+    const rf=kw(g,'REFRACTION',800,170,96,'#2CE6FF',0);rf.querySelector('text').setAttribute('font-family','Bungee, Noto Sans TC, sans-serif');const k=mkKoko(g);const t1=tag(g,800,640,'光碰到水面折一下＝折射','#0E2A40',46);
+    return (lt,B)=>{sl.set(seg(lt,S.c(4)-.1,S.c(4)+.2)*.5,lt);big.forEach((n,i)=>hit(n,640+i*320,380,lt,S.c(2+i),B));hit(rf,800,170,lt,S.c(4),B);
+      k.set({x:lerp(-200,250,eo(seg(lt,0,1))),y:640,t:lt,s:.85,wave:true,wow:lt>S.c(2)});hit(t1,800,640,lt,S.c(0),B);};},
+  C_3(g,S){
+    const p=chorusBase(g,'straw',.18);
+    const sh=shout(g,430,220,'眼睛被騙了！',70,'#FFFFFF');
+    const k=mkKoko(g);const t1=tag(g,1100,780,'吸管沒斷，是光在水面折一下','#7A1E4A',44);
+    const ring=el('ellipse',{cx:1104,cy:345,rx:120,ry:80,fill:'none',stroke:'#FF3F6E','stroke-width':9,'stroke-dasharray':'18 12',opacity:0},g);
+    return (lt,B)=>{p.kb(lt,5,1.04,1.1,1104,345);ring.setAttribute('opacity',seg(lt,S.c(0),S.c(0)+.3));hit(sh,430,220,lt,S.c(4),B);
+      k.set({x:250,y:620,t:lt,s:.8,wave:lt>S.c(4),wow:true});hit(t1,1100,780,lt,S.c(6)-.3,B);};},
+  V2_0(g,S){
+    const p=photo(g,'bowl');shade(g,.1);realBadge(g);
+    const eye=txt(g,170,270,'👁️',110,'#fff');
+    const sight=el('line',{x1:230,y1:282,x2:1250,y2:330,stroke:'#FFE14D','stroke-width':6,'stroke-dasharray':'16 12',opacity:0},g);
+    const ghost=el('ellipse',{cx:900,cy:390,rx:110,ry:36,fill:'none',stroke:'#FFD34D','stroke-width':6,'stroke-dasharray':'12 10',opacity:0},g);
+    const q=kw(g,'看不見？',1280,180,110,'#FF3FB0',6);const t1=tag(g,900,470,'硬幣藏在碗裡','#5A4300',36);
+    return (lt,B)=>{p.kb(lt,4.6,1,1.05);sight.setAttribute('opacity',seg(lt,S.c(2),S.c(2)+.3));ghost.setAttribute('opacity',seg(lt,S.c(0),S.c(0)+.3)*(.5+.5*Math.sin(lt*6)));
+      t1.setAttribute('opacity',seg(lt,S.c(1),S.c(1)+.3));hit(q,1280,180,lt,S.c(4),B);};},
+  V2_1(g,S){
+    const a=photo(g,'bowl');const b=photo(g,'coin');realBadge(g);
+    const stream=el('path',{d:'M760 -20 C770 120 790 220 820 330',fill:'none',stroke:'#BFE9FF','stroke-width':34,'stroke-linecap':'round',opacity:0,filter:'url(#soft)'},g);
+    const k=kw(g,'浮上來了！',1240,200,110,'#FFB400',-6);const t1=tag(g,976,650,'（看起來的位置）','#0E5A8A',36);
+    const ring=el('ellipse',{cx:976,cy:512,rx:200,ry:70,fill:'none',stroke:'#FFE14D','stroke-width':8,opacity:0,filter:'url(#neon)'},g);
+    return (lt,B)=>{const f=seg(lt,S.c(3),S.c(4)+.2);b.g.setAttribute('opacity',f);a.g.setAttribute('opacity',1-f);a.kb(lt,4.6,1,1.04);b.kb(lt,4.6,1.04,1.08,976,512);
+      stream.setAttribute('opacity',seg(lt,S.c(0),S.c(0)+.2)*(1-seg(lt,S.c(4),S.c(5))));
+      ring.setAttribute('opacity',seg(lt,S.c(4),S.c(4)+.3));hit(k,1240,200,lt,S.c(4),B);hit(t1,976,650,lt,S.c(5),B);};},
+  V2_2(g,S){
+    const p=photo(g,'pool');shade(g,.08);realBadge(g);
+    const look=el('g',{opacity:0},g);el('line',{x1:330,y1:380,x2:330,y2:560,stroke:'#FFE14D','stroke-width':12,'stroke-linecap':'round'},look);el('line',{x1:290,y1:560,x2:370,y2:560,stroke:'#FFE14D','stroke-width':10},look);txt(look,330,610,'看起來',44,'#FFE14D',{stroke:'#000','stroke-width':6,'paint-order':'stroke'});
+    const k=kw(g,'淺淺的？',1200,200,120,'#14B8E6',-5);
+    return (lt,B)=>{p.kb(lt,4.6,1,1.06);look.setAttribute('opacity',seg(lt,S.c(2),S.c(2)+.3));hit(k,1200,200,lt,S.c(4),B);};},
+  V2_3(g,S){
+    const p=photo(g,'pool');shade(g,.15);realBadge(g);
+    const look=el('g',{},g);el('line',{x1:330,y1:380,x2:330,y2:560,stroke:'#FFE14D','stroke-width':12,'stroke-linecap':'round',opacity:.55},look);txt(look,330,330,'看起來',40,'#FFE14D',{stroke:'#000','stroke-width':6,'paint-order':'stroke'});
+    const real=el('line',{x1:470,y1:380,x2:470,y2:380,stroke:'#FF3F6E','stroke-width':14,'stroke-linecap':'round'},g);
+    const rl=txt(g,470,330,'真的',40,'#FF8FA8',{stroke:'#000','stroke-width':6,'paint-order':'stroke',opacity:0});
+    const warn=tag(g,1100,560,'⚠️ 先確認深度・要有大人在','#B3122E',50);const k=kw(g,'其實很深！',1150,230,120,'#FF3F6E',4);
+    return (lt,B)=>{p.kb(lt,5,1.06,1.1);const d=eo(seg(lt,S.c(0),S.c(3)));real.setAttribute('y2',380+d*400);rl.setAttribute('opacity',seg(lt,S.c(0),S.c(1)));
+      hit(k,1150,230,lt,S.c(0),B);hit(warn,1100,560,lt,S.c(4),B);};},
+  break(g,S){
+    el('rect',{x:0,y:0,width:1600,height:900,fill:'#0B1420'},g);
+    const panels=[['straw','吸管沒斷！'],['coin','硬幣浮起來'],['pool','泳池更深'],['net','往深處撈'],['train','竹東 GO!']];
+    const P=[[40,40,740,390],[820,40,740,390],[40,470,740,390],[820,470,740,390]];
+    const frames=P.map(([x,y,w,h],i)=>{const fg=el('g',{},g);const id=gid();const c=el('clipPath',{id},fg);el('rect',{x,y,width:w,height:h,rx:10},c);
+      const inner=el('g',{'clip-path':`url(#${id})`},fg);const im=el('image',{x,y,width:w,height:h,preserveAspectRatio:'xMidYMid slice'},inner);
+      el('rect',{x,y,width:w,height:h,rx:10,fill:'none',stroke:'#fff','stroke-width':10},fg);
+      const lab=el('g',{},fg);el('rect',{x:x+w-320,y:y+20,width:300,height:66,rx:12,fill:'#fff',stroke:'#111','stroke-width':5},lab);const lt_=txt(lab,x+w-170,y+54,'',40,'#111');
+      return {fg,im,lt_,x,y,w,h};});
+    const sl=speedLines(g,800,450,'#FFFFFF');
+    const title=shout(g,800,450,'竹東動漫小劇場',68,'#FFE14D');
+    const k=mkKoko(g);
+    return (lt,B)=>{const bi=Math.floor(B/2);
+      frames.forEach((f,i)=>{const pi=(bi+i)%panels.length;f.im.setAttribute('href','mv/'+panels[pi][0]+'.jpg');f.lt_.textContent=panels[pi][1];
+        const kk=((B/2)%1);const s=1+.04*Math.pow(1-kk,3);f.fg.setAttribute('transform',`translate(${f.x+f.w/2},${f.y+f.h/2}) scale(${s}) translate(${-(f.x+f.w/2)},${-(f.y+f.h/2)})`);});
+      sl.set(.35*Math.pow(1-((B%1)),2),lt);title.setAttribute('opacity',1);pop(title,800,450,back(seg(lt,0,.4))*pulse(B));
+      const kx=800+Math.sin(lt*1.4)*420;k.set({x:kx,y:450+Math.cos(lt*2.8)*40,t:lt,s:.75,wave:true,wow:Math.floor(B)%4===0,rot:Math.sin(B*Math.PI)*14});
+      setCue(lt<2?'🫰 跟著節奏彈指！':'竹東 make some noise！');};},
+  V3_0(g,S){
+    const p=photo(g,'aquarium');shade(g,.12);realBadge(g);
+    const t1=tag(g,330,170,'🏮 夜市撈金魚','#B3122E',50);const k=kw(g,'怎麼撈？',1260,250,120,'#FFB400',6);
+    const lan=['🏮','🏮','🏮'].map((e,i)=>txt(g,140+i*110,80,e,70,'#fff'));
+    return (lt,B)=>{p.kb(lt,4.6,1,1.07,560,300);lan.forEach((n,i)=>n.setAttribute('transform',`rotate(${Math.sin(lt*3+i)*10} ${140+i*110} 40)`));hit(t1,330,170,lt,S.c(0),B);hit(k,1260,250,lt,S.c(4),B);};},
+  V3_1(g,S){
+    const p=photo(g,'net');shade(g,.08);realBadge(g);
+    const fish=(y)=>`M1060 ${y} q60 -40 140 0 q-80 40 -140 0z M1200 ${y} l40 -26 l0 52z`;
+    const ghost=el('g',{opacity:0},g);el('path',{d:fish(560),fill:'none',stroke:'#FFE14D','stroke-width':6,'stroke-dasharray':'12 8'},ghost);txt(ghost,1400,560,'看到的魚',40,'#FFE14D',{stroke:'#000','stroke-width':6,'paint-order':'stroke'});
+    const real=el('g',{opacity:0},g);el('path',{d:fish(690),fill:'#FF8A3D',stroke:'#fff','stroke-width':4},real);txt(real,1410,690,'真的魚在這',40,'#FFB27A',{stroke:'#000','stroke-width':6,'paint-order':'stroke'});
+    const arr=el('path',{d:'M1000 560 L1000 680 M970 650 L1000 690 L1030 650',fill:'none',stroke:'#2CE6FF','stroke-width':12,'stroke-linecap':'round','stroke-linejoin':'round',filter:'url(#neon)',opacity:0},g);
+    const k=kw(g,'往深一點撈！',1180,200,104,'#2CE6FF',-4);
+    return (lt,B)=>{p.kb(lt,5,1,1.05,900,560);ghost.setAttribute('opacity',seg(lt,S.c(0),S.c(0)+.3));real.setAttribute('opacity',seg(lt,S.c(3),S.c(3)+.3));
+      arr.setAttribute('opacity',seg(lt,S.c(4),S.c(4)+.2));arr.setAttribute('transform',`translate(0,${Math.sin(lt*8)*8})`);hit(k,1180,200,lt,S.c(4),B);};},
+  V3_2(g,S){
+    const p=photo(g,'magnifier');shade(g,.05);realBadge(g);
+    const ring=el('circle',{cx:552,cy:320,r:255,fill:'none',stroke:'#FFE14D','stroke-width':12,filter:'url(#neon)',opacity:0},g);
+    const k=kw(g,'🔍 放大鏡',1250,180,100,'#FFB400',6);const t1=tag(g,1200,780,'眼鏡也是讓光換方向','#5A3A12',42);
+    return (lt,B)=>{p.kb(lt,4.6,1,1.08,552,320);ring.setAttribute('opacity',seg(lt,S.c(4),S.c(4)+.3)*(.6+.4*Math.sin(lt*7)));hit(k,1250,180,lt,S.c(0),B);hit(t1,1200,780,lt,S.c(4),B);};},
+  P_0(g,S){
+    const p=photo(g,'straw');shade(g,.3);realBadge(g);
+    const sl=speedLines(g,1104,345,'#FFFFFF');
+    const sh=shout(g,460,230,'別急著相信！',74,'#FFFFFF');
+    const eye=txt(g,460,520,'👁️',150,'#fff',{opacity:0});
+    return (lt,B)=>{p.kb(lt,4.6,1.1,1.2,1104,345);sl.set(seg(lt,S.c(0),S.c(0)+.2)*.35,lt);hit(sh,460,230,lt,S.c(0),B);
+      eye.setAttribute('opacity',seg(lt,S.c(5),S.c(5)+.3));eye.setAttribute('transform',`translate(0,${Math.sin(lt*6)*8})`);};},
+  P_1(g,S){
+    const zoom=el('g',{},g);const p=photo(zoom,'laser');realBadge(g);
+    const surf=el('line',{x1:420,y1:362,x2:1180,y2:362,stroke:'#2CE6FF','stroke-width':10,filter:'url(#neon)',pathLength:1,'stroke-dasharray':1,'stroke-dashoffset':1},zoom);
+    const t1=tag(g,1180,640,'答案在這裡：水面','#0E5A8A',48);const k=kw(g,'水的表面',1180,200,110,'#2CE6FF',-4);
+    return (lt,B)=>{const z=lerp(1,1.3,eio(seg(lt,0,2)));zoom.setAttribute('transform',`translate(688,365) scale(${z}) translate(-688,-365)`);
+      surf.setAttribute('stroke-dashoffset',1-eo(seg(lt,S.c(4),S.c(8)||S.c(4)+1.5)));hit(k,1180,200,lt,S.c(6),B);hit(t1,1180,640,lt,S.c(8)||S.c(6)+.5,B);};},
+  V3_1b(g,S){
+    const p=photo(g,'net');shade(g,.12);realBadge(g);
+    const real=el('g',{},g);el('path',{d:'M1060 690 q60 -40 140 0 q-80 40 -140 0z M1200 690 l40 -26 l0 52z',fill:'#FF8A3D',stroke:'#fff','stroke-width':4},real);
+    const ring=el('circle',{cx:1130,cy:690,r:110,fill:'none',stroke:'#2FB36E','stroke-width':10,filter:'url(#neon)',opacity:0},g);
+    const arr=el('path',{d:'M1000 470 L1000 660 M965 625 L1000 670 L1035 625',fill:'none',stroke:'#2CE6FF','stroke-width':14,'stroke-linecap':'round','stroke-linejoin':'round',filter:'url(#neon)'},g);
+    const k=kw(g,'往深一點！',1180,200,120,'#2FB36E',-4);const ok=tag(g,1130,840-60,'✓ 撈到了！','#1E7A48',44);
+    return (lt,B)=>{p.kb(lt,5,1.05,1.12,1000,600);arr.setAttribute('transform',`translate(0,${Math.sin(lt*8)*12})`);hit(k,1180,200,lt,S.c(0),B);
+      ring.setAttribute('opacity',seg(lt,S.c(5),S.c(5)+.3));hit(ok,1130,780,lt,S.c(6),B);};},
+  R_0(g,S){
+    const L=el('g',{},g);const a=photo(L,'straw');const R=el('g',{},g);const b=photo(R,'coin');
+    const c1=gid(),c2=gid();const cp1=el('clipPath',{id:c1},g);el('rect',{x:0,y:0,width:796,height:900},cp1);const cp2=el('clipPath',{id:c2},g);el('rect',{x:804,y:0,width:796,height:900},cp2);
+    L.setAttribute('clip-path',`url(#${c1})`);R.setAttribute('clip-path',`url(#${c2})`);a.g.setAttribute('transform','translate(-300,0)');b.g.setAttribute('transform','translate(380,0)');
+    shade(g,.3);realBadge(g);
+    const t1=tag(g,400,160,'✓ 吸管沒斷','#1E7A48',50);const t2=tag(g,1200,160,'✓ 硬幣沒跑','#1E7A48',50);
+    return (lt,B)=>{hit(t1,400,160,lt,S.c(0),B);hit(t2,1200,160,lt,S.c(4),B);};},
+  R_1(g,S){
+    const p=photo(g,'pool');shade(g,.35);realBadge(g);
+    const path=el('path',{d:'M120 120 L620 430 Q700 470 760 560 L980 860',fill:'none',stroke:'#FFE14D','stroke-width':16,'stroke-linecap':'round',filter:'url(#neon)',pathLength:1,'stroke-dasharray':1,'stroke-dashoffset':1},g);
+    const t1=tag(g,1150,200,'✓ 泳池沒變','#1E7A48',50);const k=kw(g,'是光在水面折一下',1150,420,110,'#FFB400',-4);
+    return (lt,B)=>{p.kb(lt,2.3,1,1.04);hit(t1,1150,200,lt,S.c(0),B);path.setAttribute('stroke-dashoffset',1-eo(seg(lt,S.c(4),S.c(7))));hit(k,1150,420,lt,S.c(4),B);};},
+  R_2(g,S){
+    const p=photo(g,'train',{blur:1});shade(g,.55);
+    const k=mkKoko(g);const t=kw(g,'記起來！',800,170,130,'#FF3FB0',-4);const sh=shout(g,1230,560,'你就是偵探！',60,'#FFE14D');
+    return (lt,B)=>{k.set({x:800,y:520,t:lt,s:1.25,wave:true,wow:lt>S.c(4)});hit(t,800,170,lt,S.c(0),B);hit(sh,1230,560,lt,S.c(4),B);};},
+  R_3(g,S){
+    const p=photo(g,'laser');shade(g,.2);realBadge(g);
+    const k=kw(g,'換個方向 ✨',1180,200,120,'#FFB400',-4);const sl=speedLines(g,688,365,'#B6FFC8');
+    return (lt,B)=>{p.kb(lt,2.3,1.15,1.0,688,365);sl.set(.25,lt);hit(k,1180,200,lt,S.c(4),B);};},
+  V3_3(g,S){
+    const a=photo(g,'magnifier');const b=photo(g,'drop');realBadge(g);
+    const ring=el('circle',{cx:552,cy:320,r:255,fill:'none',stroke:'#FFE14D','stroke-width':12,filter:'url(#neon)',opacity:0},g);
+    const k0=kw(g,'🔍 放大鏡一照',1200,170,96,'#FFB400',6);const k=kw(g,'字大一號！',1250,170,130,'#FF3FB0',-6);
+    return (lt,B)=>{const f=seg(lt,S.c(5)-.2,S.c(5)+.2);b.g.setAttribute('opacity',f);a.g.setAttribute('opacity',1-f);a.kb(lt,4.6,1,1.08,552,320);b.kb(Math.max(0,lt-S.c(5)),2.5,1,1.5,840,424);
+      ring.setAttribute('opacity',(1-f)*seg(lt,S.c(2),S.c(2)+.3));hit(k0,1200,170,lt,S.c(0),B);k0.setAttribute('opacity',(1-f)*(lt>S.c(0)?1:0));hit(k,1250,170,lt,S.c(6),B);};},
+  outro(g,S){
+    const p=photo(g,'train');shade(g,.5);
+    const k=mkKoko(g);
+    const t=kw(g,'任務完成！',800,250,170,'#FFB400',-3);
+    const l1=tag(g,800,470,'光走直線，碰到水面折一下 ＝ 折射','#0E2A40',54);
+    const l2=tag(g,800,600,'看起來淺 → 其實更深，要小心','#7A1E4A',46);
+    return (lt,B)=>{p.kb(lt,10.7,1.14,1.02,800,450);hit(t,800,250,lt,.3,B);hit(l1,800,470,lt,1.6,B);hit(l2,800,600,lt,2.6,B);
+      k.set({x:lerp(1800,1330,eo(seg(lt,3,4.2))),y:720,t:lt,s:.85,wave:true});setCue('🫰 Snap!');};}
+};
+['V2_1b','V2_1c'].forEach(k=>VIS[k]=VIS.V2_1);
+['C1','C2','C3','C4'].forEach(c=>{for(let i=0;i<4;i++)VIS[c+'_'+i]=VIS['C_'+i];});
+
+/* ================= 煙火 ================= */
+function burst(parent,x,y,color){const g=el('g',{},parent);const ls=[];for(let i=0;i<14;i++){ls.push(el('line',{stroke:color,'stroke-width':7,'stroke-linecap':'round'},g));}
+  return t=>{if(t<=0||t>=1){g.setAttribute('opacity',0);return;}g.setAttribute('opacity',1-t);
+    ls.forEach((l,i)=>{const a=i/14*Math.PI*2,r1=12+90*eo(t),r2=34+170*eo(t);l.setAttribute('x1',x+Math.cos(a)*r1);l.setAttribute('y1',y+Math.sin(a)*r1);l.setAttribute('x2',x+Math.cos(a)*r2);l.setAttribute('y2',y+Math.sin(a)*r2);});};}
+const fwG=document.getElementById('fw');const fwList=[];let lastFw=-1;
+function party(T,B,on){const bi=Math.floor(B);
+  if(on&&bi!==lastFw&&bi%2===0){lastFw=bi;const cols=['#FF3FB0','#2CE6FF','#FFE66B','#2FB36E'];fwList.push({f:burst(fwG,150+((bi*397)%1300),80+((bi*211)%200),cols[bi%4]),t:T});}
+  for(let i=fwList.length-1;i>=0;i--){const k=(T-fwList[i].t)/1.1;fwList[i].f(k);if(k>=1)fwList.splice(i,1);}
+  if(!fwList.length&&fwG.childNodes.length>24)fwG.innerHTML='';}
+
+/* ================= 播放器 ================= */
+const audio=document.getElementById('audio');
+const sceneG=document.getElementById('scene'),camG=document.getElementById('cam'),karaEl=document.getElementById('kara'),secEl=document.getElementById('sec'),flashEl=document.getElementById('flash');
+const stage=document.getElementById('stage'),stepsEl=document.getElementById('steps'),playBtn=document.getElementById('playBtn');
+let curSeg=-1,upd=null,spans=[],started=false,cueText='';
+function setCue(s){if(s!==cueText){cueText=s;if(!SEGS[curSeg].ly)karaEl.textContent=s;}}
+function segAt(T){for(let i=SEGS.length-1;i>=0;i--)if(T>=SEGS[i].s)return i;return 0;}
+function enter(i){
+  curSeg=i;const S=SEGS[i];sceneG.innerHTML='';cueText='';
+  const ctx={c:k=>(S.ct[k]!=null?S.ct[k]:S.s+k*.5)-S.s};
+  karaEl.innerHTML='';spans=[];
+  if(!S.ly){karaEl.className='cue';karaEl.textContent='🎧 準備好了嗎？';}
+  else{karaEl.className='';(S.ly.match(/[A-Za-z']+|\s+|[^\sA-Za-z]/g)||[]).forEach(c=>{if(/^\s+$/.test(c)){const g=document.createElement('span');g.className='gap';karaEl.appendChild(g);return;}const s=document.createElement('span');s.textContent=c;karaEl.appendChild(s);spans.push(s);});}
+  upd=VIS[S.vis](sceneG,ctx);
+  secEl.textContent=S.sec;markSteps();
+}
+const SECS=[];SEGS.forEach((S,i)=>{if(i===0||SEGS[i-1].sec!==S.sec)SECS.push({name:S.sec,s:S.s,i});});
+SECS.forEach(x=>{const b=document.createElement('button');b.textContent=x.name;b.onclick=()=>{go(x.s);};stepsEl.appendChild(b);});
+function markSteps(){let k=0;SECS.forEach((x,j)=>{if(curSeg>=x.i)k=j;});[...stepsEl.children].forEach((b,j)=>{const c=j===k?'now':j<k?'done':'';if(b.className!==c){b.className=c;if(c==='now'&&b.scrollIntoView)b.scrollIntoView({block:'nearest',inline:'center'});}});}
+function go(t){started=true;document.getElementById('startOv').hidden=true;document.getElementById('endOv').hidden=true;try{audio.currentTime=t;}catch(e){}fwList.length=0;fwG.innerHTML='';audio.play().catch(()=>{});}
+function frame(){
+  const T=audio.currentTime||0;const B=beatOf(T);
+  const i=segAt(T);if(i!==curSeg)enter(i);
+  const S=SEGS[i];
+  if(upd)upd(T-S.s,B);
+  if(S.ly){let cur=-1;S.ct.forEach((t,j)=>{if(T>=t-.05)cur=j;});spans.forEach((s,j)=>{const c=j===cur?'now':j<cur?'sung':'';if(s.className!==c)s.className=c;});karaEl.style.transform='';}
+  else karaEl.style.transform=`scale(${pulse(B)})`;
+  const hype=S.sec.includes('副歌')||S.vis==='break'||S.vis==='outro';
+  const bp=Math.pow(1-(((B%1)+1)%1),4);
+  flashEl.setAttribute('opacity',hype&&!audio.paused&&Math.floor(B)%4===0?.1*bp:0);
+  camG.setAttribute('transform',hype?`translate(800,450) scale(${1+.012*bp}) translate(-800,-450)`:'');
+  party(T,B,started&&!audio.paused&&S.party);
+  requestAnimationFrame(frame);
+}
+audio.addEventListener('play',()=>playBtn.textContent='⏸ 暫停');
+audio.addEventListener('pause',()=>playBtn.textContent='▶ 播放');
+audio.addEventListener('ended',()=>{document.getElementById('endOv').hidden=false;});
+document.getElementById('startBtn').onclick=e=>{e.stopPropagation();go(0);};
+document.getElementById('againBtn').onclick=e=>{e.stopPropagation();go(0);};
+document.getElementById('restartBtn').onclick=()=>go(0);
+document.getElementById('backBtn').onclick=()=>{go(Math.max(0,(audio.currentTime||0)-5));};
+playBtn.onclick=()=>{if(!started){go(0);return;}if(audio.paused)audio.play().catch(()=>{});else audio.pause();};
+document.getElementById('fsBtn').onclick=()=>{const f=stage.requestFullscreen||stage.webkitRequestFullscreen;if(document.fullscreenElement){document.exitFullscreen();}else if(f){try{f.call(stage);}catch(e){}}};
+stage.addEventListener('click',e=>{if(e.target.closest('button')||!started)return;if(audio.paused)audio.play().catch(()=>{});else audio.pause();});
+new ResizeObserver(()=>stage.style.setProperty('--u',stage.clientWidth/1600)).observe(stage);
+window.__mvSeek=t=>{audio.currentTime=t;};
+enter(0);requestAnimationFrame(frame);
+})();
+</script>
+<script src="../games/fx.js"></script>
+</body>
+</html>

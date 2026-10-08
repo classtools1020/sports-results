@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#05101f">
+<title>折射實驗室・吸管真的斷了嗎？</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+TC:wght@500;700;900&display=swap">
+<style>
+  :root{--bg1:#05101f;--bg2:#0a2036;--bg3:#0e3350;--panel:#0f2841;--line:rgba(120,170,210,.28);
+    --amber:#ffc93c;--teal:#42e0c8;--aqua:#3ec2ff;--ink:#eaf6ff;--dim:#9db8cf;
+    --disp:'Fredoka','Noto Sans TC',system-ui,sans-serif;--body:'Noto Sans TC',system-ui,sans-serif}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{font-family:var(--body);color:var(--ink);min-height:100vh;-webkit-tap-highlight-color:transparent;
+    background:radial-gradient(120% 80% at 50% -10%,rgba(62,194,255,.12),transparent 55%),linear-gradient(165deg,var(--bg1),var(--bg2) 55%,var(--bg3))}
+  .fixbtn{position:fixed;top:12px;z-index:99999;background:#0f2841;font-weight:900;font-size:15px;text-decoration:none;padding:8px 14px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,.45)}
+  .home{left:12px;border:2px solid var(--amber);color:var(--amber)} .menu{right:12px;border:2px solid var(--teal);color:var(--teal)}
+  .hud{position:fixed;top:58px;right:12px;z-index:99998;background:linear-gradient(180deg,#1b3a5c,#0f2841);border:2px solid var(--amber);color:var(--amber);font-family:var(--disp);font-weight:700;font-size:20px;padding:6px 16px;border-radius:999px;box-shadow:0 6px 16px rgba(0,0,0,.5);transition:transform .15s}
+  .hud.bump{transform:scale(1.25)}
+  .flycoin{position:fixed;z-index:99999;font-size:34px;pointer-events:none;transition:transform .75s cubic-bezier(.2,.8,.3,1),opacity .2s .6s;filter:drop-shadow(0 4px 6px rgba(0,0,0,.6))}
+  .wrap{max-width:980px;margin:0 auto;padding:16px 14px 90px}
+  header{text-align:center;padding:40px 0 2px}
+  .emblem{font-size:46px;filter:drop-shadow(0 8px 18px rgba(62,194,255,.4))}
+  h1{font-family:var(--disp);font-size:28px;margin:2px 0}
+  .sub{color:var(--aqua);font-weight:900;font-size:18px}
+  .prog{margin:10px auto 0;max-width:560px;background:#0f2841;border:2px solid var(--line);border-radius:999px;padding:6px 14px;display:flex;align-items:center;gap:10px;font-weight:900;font-size:14px}
+  .prog .bar{flex:1;height:10px;border-radius:999px;background:#1a2a44;overflow:hidden}.prog .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--aqua),var(--amber));transition:width .5s}
+  h2.sec{font-size:21px;margin:22px 0 10px;display:flex;align-items:center;gap:10px}
+  h2.sec::after{content:"";flex:1;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--aqua),transparent)}
+  .card{background:var(--panel);border:3px solid var(--line);border-radius:24px;padding:14px;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+  .ps{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:16/9;background:#08111d;border:2px solid var(--line);touch-action:none;cursor:grab}
+  .ps canvas,.ps img{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .ps img{object-fit:cover}
+  .ps .lbl{position:absolute;left:12px;top:12px;background:rgba(0,0,0,.62);color:#fff;font-family:var(--disp);font-weight:700;font-size:min(4.5vw,22px);padding:6px 14px;border-radius:12px;z-index:3;pointer-events:none}
+  .ps .note{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;background:linear-gradient(0deg,rgba(4,10,20,.92),transparent);font-weight:900;font-size:min(4vw,18px);z-index:3;pointer-events:none}
+  .ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:10px}
+  .btn{font-family:var(--disp);font-weight:700;font-size:18px;border:none;border-radius:16px;padding:12px 20px;cursor:pointer}
+  .btn.go{background:linear-gradient(180deg,var(--amber),#ff9f1c);color:#08131f;box-shadow:0 6px 0 #c9860f}.btn.go:active{transform:translateY(4px);box-shadow:0 2px 0 #c9860f}
+  .btn.aqua{background:linear-gradient(180deg,#7fdcff,#2aa7e8);color:#062a3d;box-shadow:0 6px 0 #1a7fb5}.btn.aqua:active{transform:translateY(4px);box-shadow:0 2px 0 #1a7fb5}
+  .btn.ghost{background:#13314f;border:2px solid var(--line);color:var(--ink)}
+  .btn.on{outline:3px solid var(--amber)}
+  .btn.cam{background:linear-gradient(180deg,#ff8fb1,#e0457b);color:#fff;box-shadow:0 6px 0 #9c2a55;position:relative;overflow:hidden}
+  .btn.cam input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
+  input[type=range]{width:min(70vw,360px);accent-color:var(--aqua)}
+  .lbl2{font-weight:900;font-size:16px;color:#dbe9f7}
+  .say{margin-top:10px;font-size:17px;font-weight:800;color:#ffe08a;text-align:center;min-height:24px}
+  .term{display:inline-block;background:var(--teal);color:#063;border-radius:999px;padding:1px 12px;font-size:14px;font-weight:900;margin-left:6px}
+  .real{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:600px){.real{grid-template-columns:1fr}}
+  .real .ps{aspect-ratio:4/3;cursor:default}
+  .real .empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:var(--dim);font-weight:900;font-size:18px}
+  /* magic cards */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:600px){.cards{grid-template-columns:repeat(2,1fr)}}
+  .mc{position:relative;border-radius:16px;overflow:hidden;border:3px solid var(--line);aspect-ratio:4/3;cursor:pointer;background:#08111d;transition:transform .15s,border-color .15s}
+  .mc:hover{transform:translateY(-3px)}
+  .mc img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.8);transition:filter .5s}
+  .mc.got{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,201,60,.35)}.mc.got img{filter:none}
+  .mc .tt{position:absolute;left:0;right:0;bottom:0;padding:8px 10px;background:linear-gradient(0deg,rgba(4,10,20,.92),transparent);font-weight:900;font-size:min(3.8vw,16px)}
+  .mc .tap{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.6);color:#fff;font-weight:900;font-size:12px;padding:4px 10px;border-radius:999px}
+  .mc .ok{position:absolute;top:8px;left:8px;font-size:22px;display:none}.mc.got .ok{display:block}
+  /* experience overlay */
+  .xp{position:fixed;inset:0;z-index:9300;background:#03081a;display:none;flex-direction:column;align-items:center;justify-content:flex-start;padding:12px;overflow:auto}
+  .xp.show{display:flex;animation:fade .25s}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .xp .x{position:absolute;right:14px;top:14px;width:46px;height:46px;border-radius:50%;border:2px solid var(--amber);background:#0f2841;color:var(--amber);font-weight:900;font-size:22px;cursor:pointer;z-index:2}
+  .xp h3{font-family:var(--disp);font-size:min(6vw,28px);margin:6px 48px 6px;text-align:center}
+  .xp .hint{font-weight:900;color:var(--aqua);font-size:min(4.4vw,18px);margin-bottom:8px;text-align:center}
+  .xp .stage{position:relative;width:min(96vw,900px);aspect-ratio:16/9;border-radius:20px;overflow:hidden;border:3px solid var(--line);background:#08111d;touch-action:none;user-select:none;cursor:crosshair}
+  .xp .stage img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+  .xp .stage canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .xp .lens{position:absolute;width:160px;height:160px;border-radius:50%;border:6px solid rgba(255,255,255,.92);box-shadow:0 10px 30px rgba(0,0,0,.7),inset 0 0 22px rgba(255,255,255,.35);pointer-events:none;background-repeat:no-repeat;display:none;transform:translate(-50%,-50%)}
+  .xp .lens .coin{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:64px;display:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6));animation:spin 1s linear infinite}
+  @keyframes spin{from{transform:translate(-50%,-50%) rotateY(0)}to{transform:translate(-50%,-50%) rotateY(360deg)}}
+  .xp .tag{position:absolute;background:rgba(0,0,0,.65);color:#fff;font-weight:900;font-size:min(4vw,18px);padding:6px 12px;border-radius:12px;pointer-events:none;z-index:2}
+  .xp .score{position:absolute;right:12px;top:12px;background:rgba(0,0,0,.65);color:var(--amber);font-family:var(--disp);font-weight:700;font-size:min(5vw,22px);padding:6px 14px;border-radius:12px;pointer-events:none;z-index:2}
+  .xp .combo{position:absolute;left:12px;bottom:12px;background:rgba(255,60,60,.8);color:#fff;font-family:var(--disp);font-weight:700;font-size:min(5vw,22px);padding:4px 14px;border-radius:12px;pointer-events:none;z-index:2;display:none}
+  .xp .pop{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%) scale(.3);font-family:var(--disp);font-weight:700;font-size:min(9vw,54px);color:#fff;text-shadow:0 4px 0 #000,0 0 30px rgba(0,0,0,.8);pointer-events:none;opacity:0;z-index:3;white-space:nowrap}
+  .xp .pop.hit{color:#ffd43b;animation:pop .9s ease-out}.xp .pop.miss{color:#ff7b7b;animation:pop .9s ease-out}.xp .pop.gold{color:#fff2a8;font-size:min(11vw,66px);animation:pop 1.2s ease-out}
+  @keyframes pop{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}70%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-60%) scale(1)}}
+  .xp .stage.shake{animation:shake .4s}.xp .stage.bigshake{animation:shake .7s}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translate(-12px,4px)}40%{transform:translate(12px,-4px)}60%{transform:translate(-7px,2px)}80%{transform:translate(7px,-2px)}}
+  .xp .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:4}
+  .xp .flash.on{animation:flash .5s}
+  @keyframes flash{0%{opacity:.9}100%{opacity:0}}
+  .xp .ctrl{margin-top:10px}
+  .xp .why{margin-top:8px;font-size:min(4.6vw,20px);font-weight:900;color:#ffe08a;text-align:center;max-width:900px;min-height:28px}
+  .xp .ok{margin-top:10px}
+  footer{text-align:center;margin-top:26px;color:var(--dim);font-size:13px}
+  /* 上課模式：一次只顯示一站 */
+  body.lesson .wrap{max-width:1100px;padding-top:70px;padding-bottom:120px}
+  body.lesson header,body.lesson footer{display:none}
+  body.lesson .st{display:none}body.lesson .st.cur{display:block;animation:fade .3s}
+  body.lesson .st.cur h2.sec{font-size:min(6vw,30px);justify-content:center}body.lesson .st.cur h2.sec::after{display:none}
+  body.lesson .card{padding:18px}
+  body.lesson .say{font-size:min(5vw,22px)}
+  .lnav{position:fixed;left:0;right:0;bottom:0;z-index:9200;display:none;gap:10px;justify-content:center;align-items:center;padding:12px;background:linear-gradient(0deg,rgba(4,10,20,.98),rgba(4,10,20,.85));border-top:2px solid var(--line)}
+  body.lesson .lnav{display:flex}
+  .lnav .btn{font-size:min(5vw,22px);padding:14px 26px}
+  .lnav .step{font-family:var(--disp);font-weight:700;font-size:min(5vw,22px);color:var(--amber);min-width:110px;text-align:center}
+  .lnav .dots{display:flex;gap:6px}.lnav .dots i{width:12px;height:12px;border-radius:50%;background:#2a4a6e;display:block}.lnav .dots i.on{background:var(--amber);color:#08131f!important}.lnav .dots i:not(.on){color:#eaf6ff!important}
+  .lexit{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:99999;display:none;background:#0f2841;border:2px solid var(--line);color:var(--ink);font-weight:900;font-size:15px;padding:8px 14px;border-radius:999px;cursor:pointer}
+  body.lesson .lexit{display:block}
+  body.lesson #hud{top:12px;right:150px}
+</style>
+</head>
+<body>
+<a class="fixbtn home" href="../" onclick="if(history.length>1){history.back();return false;}">⬅ 返回</a>
+<a class="fixbtn menu" href="../">🗂️ 主選單</a>
+<div class="hud" id="hud">🪙 <span id="coins">0</span></div>
+<div class="wrap">
+  <header>
+    <div class="emblem">🥤</div>
+    <h1>折射實驗室・吸管真的斷了嗎？</h1>
+    <div class="sub">光從空氣進到水裡，方向會改變</div>
+    <div class="prog">🪙 折射魔法卡 <span id="pgTxt">0 / 6</span><div class="bar"><i id="pgBar"></i></div></div>
+    <div class="ctrl" style="margin-top:12px"><button class="btn go" id="lessonBtn">🎬 上課模式：一次只看一站</button></div>
+  </header>
+
+  <h2 class="sec">站 1・吸管放進水裡（同一個杯子，親眼看它「斷」）</h2>
+  <div class="card">
+    <div class="ps" id="ps1"><canvas id="c1" width="1280" height="720"></canvas><div class="lbl" id="s1lbl">還沒有水</div><div class="note" id="s1note">👆 手指在杯子上往上滑＝倒水，往下滑＝倒掉</div></div>
+    <div class="ctrl"><span class="lbl2">💧 水位</span><input type="range" id="water" min="0" max="100" value="0"><button class="btn ghost" id="pullBtn">🖐️ 拿出來看</button><button class="btn aqua" id="cmpBtn">↔ 左右對照</button></div>
+    <div class="say" id="say1">先把水倒進去，看吸管會怎樣</div>
+  </div>
+
+  <h2 class="sec">站 2・真的杯子挑戰：拍下你桌上的吸管</h2>
+  <div class="card">
+    <div class="real">
+      <div class="ps"><canvas id="c1b" width="960" height="720"></canvas><div class="lbl">螢幕上的杯子</div></div>
+      <div class="ps" id="realFrame"><div class="empty" id="realEmpty"><span style="font-size:44px">📸</span>拍你桌上那杯真的水＋吸管</div><video id="realVid" autoplay playsinline muted style="display:none;object-fit:cover"></video><img id="realImg" alt="" style="display:none"><canvas id="arC" width="960" height="720" style="z-index:2;pointer-events:none;display:none"></canvas><div class="lbl" id="realLbl" style="display:none">你的杯子</div></div>
+    </div>
+    <div class="ctrl"><button class="btn cam" id="camOpen">📷 開鏡頭</button><button class="btn go" id="camShot" style="display:none">📸 拍！</button><button class="btn ghost" id="camAgain" style="display:none">🔄 再拍一張</button><button class="btn ghost" id="arBtn" style="display:none">🔦 在真的杯子上畫光線</button><label class="btn ghost" style="position:relative;overflow:hidden">📁 或選一張照片<input type="file" accept="image/*" capture="environment" id="camIn" style="position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0"></label></div>
+    <div class="say" id="sayReal">把吸管放進真的水裡，從側邊看，拍一張——真的也「斷」了嗎？</div>
+  </div>
+
+  <h2 class="sec">站 3・消失的硬幣（同一個碗）</h2>
+  <div class="card">
+    <div class="ps" id="ps2"><canvas id="c2" width="1280" height="720"></canvas><div class="lbl" id="s2lbl">眼睛在碗邊，硬幣被擋住</div><div class="note" id="s2note">👆 點碗＝倒水，眼睛不要動</div></div>
+    <div class="ctrl"><button class="btn aqua" id="pourBtn">🫗 倒水進碗裡</button><button class="btn ghost" id="emptyBtn">↩ 倒掉</button></div>
+    <div class="say" id="say2">硬幣沒動，等一下會發生魔法</div>
+  </div>
+
+  <h2 class="sec">站 4・看見光折一下</h2>
+  <div class="card">
+    <div class="ps" style="cursor:default"><img src="img/laser.jpg" alt=""><canvas id="c3" width="960" height="540"></canvas><div class="lbl">真實雷射光進水</div><div class="note">🔦 拉入射角，看折射角變化</div></div>
+    <div class="ctrl"><span class="lbl2">🔦 入射角</span><input type="range" id="angle" min="0" max="80" value="40"><span class="lbl2" id="angleTxt">40°</span></div>
+    <div class="say" id="say3">光進水後往法線靠近，這叫<span class="term">折射 · Refraction</span></div>
+  </div>
+
+  <h2 class="sec">站 5・折射生活闖關：點一張，用手指玩</h2>
+  <div class="card">
+    <div class="cards" id="cards"></div>
+    <div class="say" id="say4">每關都是真的生活場景，用手指操作；集滿 6 張有驚喜</div>
+  </div>
+  <h2 class="sec">站 6・真人版：水盆撈硬幣（螢幕外的 4D 挑戰）</h2>
+  <div class="card">
+    <div class="real">
+      <div class="ps" style="cursor:default"><img src="img/coin.jpg" alt=""><div class="lbl">桌上真的水盆＋硬幣</div><div class="note">🥢 從側邊看，用筷子一次夾到硬幣</div></div>
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:8px;font-weight:900;font-size:17px;line-height:1.5">
+        <div>1️⃣ 水盆裝水，丟一枚 10 元硬幣到底</div><div>2️⃣ 眼睛放低，從<b>側邊</b>看硬幣</div><div>3️⃣ 筷子從上面一次夾下去，不能試探</div><div>4️⃣ 夾到？夾空？按下面計分</div>
+        <div style="color:var(--aqua)">為什麼會夾空？光從水裡出來、在水面折一下，硬幣看起來比真的<b>淺、偏</b>。要往更深、更靠中間夾。</div>
+      </div>
+    </div>
+    <div class="ctrl"><button class="btn go" id="tHit">🙌 夾到了</button><button class="btn ghost" id="tMiss">😅 夾空了</button><span class="lbl2" id="tally">夾到 0・夾空 0</span><button class="btn ghost" id="tReset">↺</button></div>
+    <div class="say" id="say5">全班輪流，看誰能一次夾到</div>
+  </div>
+  <footer>🥤 折射實驗室　｜　任務四 光的折射・Ka-IV-8　｜　竹東國中自然科</footer>
+</div>
+
+<button class="lexit" id="lexit">✖ 離開上課模式</button>
+<div class="lnav"><button class="btn ghost" id="lprev">⬅ 上一站</button><div><div class="step" id="lstep">站 1 / 6</div><div class="dots" id="ldots"></div></div><button class="btn go" id="lnext">下一站 ➡</button></div>
+<!-- 體驗覆蓋層 -->
+<div class="xp" id="xp"><button class="x" onclick="closeXp()">✖</button><h3 id="xpTitle"></h3><div class="hint" id="xpHint"></div><div class="stage" id="xpStage"></div><div class="ctrl" id="xpCtrl"></div><div class="why" id="xpWhy"></div><div class="ok" id="xpOk"></div></div>
+
+<script src="../games/fx.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+function cover(im,W,H){const s=Math.max(W/im.width,H/im.height),w=im.width*s,h=im.height*s;return {x:(W-w)/2,y:(H-h)/2,w,h};}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+/* ===================== 實體感：震動、水聲、金幣錢包 ===================== */
+let touched=false;addEventListener("pointerdown",()=>{touched=true;},{once:true,capture:true});
+function buzz(p){if(!touched)return;try{navigator.vibrate&&navigator.vibrate(p);}catch(e){}}
+let AC=null;function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}if(AC&&AC.state==="suspended")AC.resume();return AC;}
+function splashSound(v){const a=ac();if(!a)return;const n=Math.floor(a.sampleRate*.35),b=a.createBuffer(1,n,a.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.2);
+  const s=a.createBufferSource();s.buffer=b;const f=a.createBiquadFilter();f.type="bandpass";f.frequency.value=1400;f.Q.value=.6;const g=a.createGain();g.gain.value=v||.5;s.connect(f);f.connect(g);g.connect(a.destination);s.start();}
+function bubbleSound(){const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain(),t=a.currentTime;o.type="sine";o.frequency.setValueAtTime(250+Math.random()*250,t);o.frequency.exponentialRampToValueAtTime(900+Math.random()*500,t+.12);
+  g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+.16);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+.17);}
+function thudSound(){const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain(),t=a.currentTime;o.type="sine";o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(40,t+.35);g.gain.setValueAtTime(.7,t);g.gain.exponentialRampToValueAtTime(.001,t+.4);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+.42);}
+let coins=+(localStorage.getItem("refractCoins")||0);$("coins").textContent=coins;
+function addCoins(n,sx,sy){const hud=$("hud"),hr=hud.getBoundingClientRect();const cnt=Math.min(6,n);
+  for(let k=0;k<cnt;k++){const el=document.createElement("div");el.className="flycoin";el.textContent="🪙";const x0=(sx||innerWidth/2)+(Math.random()*80-40),y0=(sy||innerHeight/2)+(Math.random()*60-30);
+    el.style.left=x0+"px";el.style.top=y0+"px";document.body.appendChild(el);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{el.style.transform=`translate(${hr.left+hr.width/2-x0-17}px,${hr.top+hr.height/2-y0-17}px) scale(.6)`;el.style.opacity="0";}));
+    setTimeout(()=>{el.remove();coins+=Math.round(n/cnt);$("coins").textContent=coins;localStorage.setItem("refractCoins",coins);hud.classList.add("bump");FX.sound.coin();setTimeout(()=>hud.classList.remove("bump"),150);},700+k*60);}}
+/* 粒子（水花、泡泡、漣漪） */
+function makeParts(){const P=[];return {P,
+  splash(x,y,n,col){for(let k=0;k<(n||18);k++)P.push({t:"d",x,y,vx:(Math.random()*2-1)*7,vy:-Math.random()*9-3,life:1,r:3+Math.random()*4,c:col||"rgba(200,240,255,.95)"});P.push({t:"r",x,y,r:8,life:1});P.push({t:"r",x,y,r:2,life:1.25});},
+  bubbles(x,y,n){for(let k=0;k<(n||3);k++)P.push({t:"b",x:x+Math.random()*30-15,y,vx:Math.random()*1-.5,vy:-2-Math.random()*2,life:1,r:3+Math.random()*6});},
+  ripple(x,y){P.push({t:"r",x,y,r:6,life:1});},
+  step(x){for(let i=P.length-1;i>=0;i--){const p=P[i];
+    if(p.t==="d"){p.vy+=.45;p.x+=p.vx;p.y+=p.vy;p.life-=.03;x.globalAlpha=Math.max(0,p.life);x.fillStyle=p.c;x.beginPath();x.arc(p.x,p.y,p.r,0,6.283);x.fill();}
+    else if(p.t==="b"){p.x+=p.vx+Math.sin(p.life*12)*.6;p.y+=p.vy;p.life-=.012;x.globalAlpha=Math.max(0,p.life)*.8;x.strokeStyle="rgba(255,255,255,.9)";x.lineWidth=2;x.beginPath();x.arc(p.x,p.y,p.r,0,6.283);x.stroke();x.fillStyle="rgba(255,255,255,.25)";x.fill();}
+    else{p.r+=4;p.life-=.03;x.globalAlpha=Math.max(0,p.life)*.9;x.strokeStyle="rgba(255,255,255,.9)";x.lineWidth=3;x.beginPath();x.ellipse(p.x,p.y,p.r,p.r*.45,0,0,6.283);x.stroke();}
+    x.globalAlpha=1;if(p.life<=0)P.splice(i,1);}}};}
+
+const fishImg=new Image();fishImg.src="img/fish.jpg";
+let fishCut=null;
+function buildFishCut(){if(fishCut||!fishImg.naturalWidth)return;try{const S=512,o=document.createElement("canvas");o.width=S;o.height=S;const g=o.getContext("2d");g.drawImage(fishImg,0,0,S,S);
+  const d=g.getImageData(0,0,S,S),p=d.data;for(let k=0;k<p.length;k+=4){const m=Math.max(p[k],p[k+1],p[k+2]);p[k+3]=clamp((m-28)*6,0,255);}g.putImageData(d,0,0);fishCut=o;}catch(e){}}
+fishImg.addEventListener("load",buildFishCut);
+function drawFish(x,cx,cy,w,alpha,opt){opt=opt||{};buildFishCut();x.save();x.translate(cx,cy);if(opt.flip)x.scale(-1,1);x.rotate(opt.rot||0);x.globalAlpha=alpha;
+  if(opt.gold)x.filter="hue-rotate(15deg) saturate(2.2) brightness(1.3)";
+  if(!fishCut){x.font=(w*.6)+"px serif";x.textAlign="center";x.fillText("🐟",0,w*.2);}
+  else{x.shadowColor="rgba(0,0,0,.5)";x.shadowBlur=12;x.drawImage(fishCut,-w/2,-w/2,w,w);}
+  x.restore();}
+
+/* ===================== 吸管折射模擬（同一張照片） ===================== */
+const G={l:.19,r:.37,top:.31,bot:.915};
+const img1=new Image();img1.src="img/glass-empty.jpg";
+function drawStraw(c,lvl,label,tea){const x=c.getContext("2d"),W=c.width,H=c.height;x.clearRect(0,0,W,H);if(!img1.complete||!img1.naturalWidth)return;
+  const f=cover(img1,W,H);x.drawImage(img1,f.x,f.y,f.w,f.h);
+  const gl=f.x+f.w*G.l,gr=f.x+f.w*G.r,gt=f.y+f.h*G.top,gb=f.y+f.h*G.bot;const wy=gb-(gb-gt)*lvl;
+  if(lvl>0){
+    x.save();x.beginPath();x.rect(gl,wy,gr-gl,gb-wy);x.clip();
+    const cx=(gl+gr)/2,dx=(gr-gl)*.14,sx=1.12;
+    x.translate(cx+dx,0);x.scale(sx,1);x.translate(-cx,0);x.drawImage(img1,f.x,f.y,f.w,f.h);x.restore();
+    x.fillStyle=tea?"rgba(196,140,80,.38)":"rgba(62,194,255,.22)";x.fillRect(gl,wy,gr-gl,gb-wy);
+    if(tea){x.fillStyle="rgba(40,20,10,.85)";for(let k=0;k<7;k++){const px=gl+18+((k*37)%(gr-gl-36)),py=gb-14-(k%3)*13;if(py>wy+8){x.beginPath();x.arc(px,py,7,0,6.283);x.fill();}}}
+    x.fillStyle="rgba(255,255,255,.55)";x.fillRect(gl,wy-3,gr-gl,6);
+    x.strokeStyle="rgba(255,255,255,.35)";x.lineWidth=2;x.beginPath();x.ellipse((gl+gr)/2,wy,(gr-gl)/2,10,0,0,6.283);x.stroke();
+    if(label){x.fillStyle="#ffd43b";x.font="900 "+Math.round(W/48)+"px 'Noto Sans TC',sans-serif";x.fillText("← 光在這裡折一下",gr+16,wy+8);}
+  }
+  return {gl,gr,gt,gb,wy};}
+let water=0,pulled=false,s1done=false,cmp=false,div=.28;
+const cmpC=document.createElement("canvas");cmpC.width=1280;cmpC.height=720;
+function drawS1(){const lvl=pulled?0:water/100;const c=$("c1");
+  if(cmp){ // 左右對照：同一張照片，左＝沒有水、右＝有水，拖中間的線比較
+    const x=c.getContext("2d"),W=c.width,H=c.height;drawStraw(c,Math.max(lvl,.75),false);drawStraw(cmpC,0,false);
+    const dx=Math.round(div*W);x.drawImage(cmpC,0,0,dx,H,0,0,dx,H);
+    x.fillStyle="#fff";x.fillRect(dx-3,0,6,H);x.beginPath();x.arc(dx,H/2,34,0,6.283);x.fill();x.fillStyle="#08131f";x.font="900 28px sans-serif";x.textAlign="center";x.fillText("↔",dx,H/2+10);
+    x.font="900 34px 'Noto Sans TC',sans-serif";const lx=clamp(dx-130,120,W-120),rx=clamp(dx+130,120,W-120);x.fillStyle="rgba(0,0,0,.6)";x.fillRect(lx-100,78,200,52);x.fillRect(rx-100,78,200,52);x.fillStyle="#fff";x.fillText("沒有水：直的",lx,116);x.fillStyle="#ffd43b";x.fillText("有水：斷了？",rx,116);x.textAlign="left";
+    $("s1lbl").textContent="左右對照：同一支吸管";}
+  else{drawStraw(c,lvl,true);$("s1lbl").textContent=pulled?"拿出來：直的！沒斷":(lvl>.5?"看起來在水面「斷」了？":lvl>0?"水慢慢漫上來…":"還沒有水");}
+  drawStraw($("c1b"),lvl,false);}
+img1.onload=drawS1;
+function setWater(v){water=clamp(Math.round(v),0,100);$("water").value=water;pulled=false;drawS1();
+  $("say1").innerHTML=water>50?"吸管看起來彎了、斷了？按「拿出來看」！":"再多倒一點水";
+  if(water>50&&!s1done){s1done=true;FX.sound.powerup();buzz([60,40,60]);setTimeout(()=>FX.stamp({text:"斷了？"}),200);}}
+$("water").oninput=e=>{FX.sound.blip();setWater(+e.target.value);};
+(function(){const el=$("ps1");let drag=false,ly=0,acc=0,bt=0;el.onpointerdown=e=>{drag=true;ly=e.clientY;try{el.setPointerCapture(e.pointerId);}catch(x){}if(cmp){const r=el.getBoundingClientRect();div=clamp((e.clientX-r.left)/r.width,.08,.92);drawS1();}};
+  el.onpointermove=e=>{if(!drag)return;if(cmp){const r=el.getBoundingClientRect();div=clamp((e.clientX-r.left)/r.width,.08,.92);drawS1();if(Date.now()-bt>120){bt=Date.now();FX.sound.blip();}return;}
+    const dy=ly-e.clientY;ly=e.clientY;acc+=dy;if(Math.abs(acc)>4){setWater(water+acc*.5);acc=0;if(Date.now()-bt>90){bt=Date.now();bubbleSound();}}};
+  el.onpointerup=el.onpointercancel=()=>{drag=false;};})();
+$("cmpBtn").onclick=()=>{cmp=!cmp;$("cmpBtn").classList.toggle("on",cmp);FX.sound.jump();drawS1();$("s1note").textContent=cmp?"↔ 拖中間的線：左邊沒有水、右邊有水，同一支吸管":"👆 手指在杯子上往上滑＝倒水，往下滑＝倒掉";$("say1").innerHTML=cmp?"同一支吸管：有水那邊看起來斷了，沒水那邊是直的<span class='term'>折射</span>":"先把水倒進去，看吸管會怎樣";};
+$("pullBtn").onclick=()=>{pulled=true;FX.sound.jump();splashSound(.4);drawS1();$("say1").innerHTML="沒斷！同一支吸管，是<b>光進水折一下</b>讓它看起來彎<span class='term'>折射</span>";FX.stamp({text:"沒斷"});FX.confetti(60);addCoins(5);setTimeout(()=>{pulled=false;drawS1();},2200);};
+/* 真的杯子挑戰：網頁內開鏡頭即時預覽→拍 */
+let camStream=null;
+function realShow(src){const im=$("realImg");im.src=src;im.style.display="block";$("realVid").style.display="none";$("realEmpty").style.display="none";$("realLbl").style.display="block";
+  $("camShot").style.display="none";$("camAgain").style.display=camStream?"inline-block":"none";$("arBtn").style.display="inline-block";
+  FX.sound.powerup();buzz([80,50,80]);FX.confetti(80);addCoins(10);$("sayReal").innerHTML="真的杯子也一樣！同一支吸管，光進水折一下就看起來斷了<span class='term'>折射</span>";setTimeout(()=>FX.stamp({text:"真的斷了？"}),400);}
+function camPreview(){$("realVid").style.display="block";$("realImg").style.display="none";$("realEmpty").style.display="none";$("realLbl").style.display="none";$("camShot").style.display="inline-block";$("camAgain").style.display="none";$("camOpen").style.display="none";$("arBtn").style.display="inline-block";$("sayReal").textContent="把真的杯子對準鏡頭，從側邊看吸管，按「📸 拍！」";}
+$("camOpen").onclick=async()=>{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$("sayReal").textContent="這台裝置開不了鏡頭，請用「📁 或選一張照片」";return;}
+  try{camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment",width:{ideal:1280}},audio:false});$("realVid").srcObject=camStream;camPreview();FX.sound.blip();}
+  catch(e){$("sayReal").textContent="鏡頭沒有打開（要按「允許」），或改用「📁 或選一張照片」";}};
+$("camShot").onclick=()=>{const v=$("realVid");if(!v.videoWidth)return;const c=document.createElement("canvas");c.width=v.videoWidth;c.height=v.videoHeight;c.getContext("2d").drawImage(v,0,0);
+  const fl=document.createElement("div");fl.style.cssText="position:fixed;inset:0;background:#fff;z-index:99990;pointer-events:none;opacity:.9;transition:opacity .4s";document.body.appendChild(fl);requestAnimationFrame(()=>fl.style.opacity="0");setTimeout(()=>fl.remove(),450);
+  FX.sound.blip();realShow(c.toDataURL("image/jpeg",.92));};
+$("camAgain").onclick=()=>{camPreview();};
+/* AR：在鏡頭畫面／照片上疊光線，手指拖曳對準真的水面 */
+let arOn=false,arY=.55,arX=.5;
+function drawAR(){const c=$("arC"),x=c.getContext("2d"),W=c.width,H=c.height;x.clearRect(0,0,W,H);if(!arOn)return;
+  const px=arX*W,py=arY*H;
+  x.setLineDash([14,10]);x.strokeStyle="rgba(255,255,255,.9)";x.lineWidth=4;x.beginPath();x.moveTo(0,py);x.lineTo(W,py);x.stroke();x.setLineDash([]);
+  x.fillStyle="rgba(0,0,0,.55)";x.fillRect(12,py-40,80,32);x.fillRect(12,py+8,80,32);x.fillStyle="#fff";x.font="900 22px 'Noto Sans TC',sans-serif";x.fillText("空氣",24,py-15);x.fillText("水",34,py+33);
+  x.strokeStyle="rgba(255,255,255,.5)";x.lineWidth=2;x.setLineDash([6,6]);x.beginPath();x.moveTo(px,py-220);x.lineTo(px,py+260);x.stroke();x.setLineDash([]);
+  const i=Math.atan2(.3,.45),r=Math.asin(Math.sin(i)/1.33);const L=Math.min(py,H-py)*.9;
+  x.lineCap="round";x.lineWidth=9;x.strokeStyle="#ffd43b";x.shadowColor="#ffd43b";x.shadowBlur=14;x.beginPath();x.moveTo(px-Math.sin(i)*L,py-Math.cos(i)*L);x.lineTo(px,py);x.stroke();
+  x.strokeStyle="#3ef0ff";x.shadowColor="#3ef0ff";x.beginPath();x.moveTo(px,py);x.lineTo(px+Math.sin(r)*L,py+Math.cos(r)*L);x.stroke();x.shadowBlur=0;
+  x.setLineDash([6,8]);x.strokeStyle="rgba(255,212,59,.45)";x.lineWidth=4;x.beginPath();x.moveTo(px,py);x.lineTo(px+Math.sin(i)*L,py+Math.cos(i)*L);x.stroke();x.setLineDash([]);
+  x.fillStyle="#ffd43b";x.font="900 24px 'Noto Sans TC',sans-serif";x.fillText("光在這裡折一下",px+20,py-14);
+  x.fillStyle="#fff";x.font="900 16px 'Noto Sans TC',sans-serif";x.fillText("👆 拖曳白線對準真的水面",W-300,H-20);}
+$("arBtn").onclick=()=>{arOn=!arOn;$("arC").style.display=arOn?"block":"none";$("arBtn").classList.toggle("on",arOn);FX.sound.blip();drawAR();$("sayReal").textContent=arOn?"把白線拖到真的水面，看光怎麼在那裡折一下（黃→藍往中間靠）":"";};
+(function(){const fr=$("realFrame");let d=false;fr.style.touchAction="none";
+  fr.onpointerdown=e=>{if(!arOn)return;d=true;try{fr.setPointerCapture(e.pointerId);}catch(x){}mv(e);};
+  function mv(e){const r=fr.getBoundingClientRect();arX=clamp((e.clientX-r.left)/r.width,.15,.85);arY=clamp((e.clientY-r.top)/r.height,.15,.85);drawAR();}
+  fr.onpointermove=e=>{if(d)mv(e);};fr.onpointerup=fr.onpointercancel=()=>{d=false;};})();
+$("camIn").onchange=e=>{const f=e.target.files&&e.target.files[0];if(!f)return;realShow(URL.createObjectURL(f));};
+
+/* ===================== 站 2：同一個碗＋硬幣浮現 ===================== */
+const img2=new Image();img2.src="img/bowl-empty.jpg";
+let fill=0,anim=null;
+function drawS2(){const c=$("c2"),x=c.getContext("2d"),W=c.width,H=c.height;x.clearRect(0,0,W,H);if(!img2.complete||!img2.naturalWidth)return;
+  const f=cover(img2,W,H);x.drawImage(img2,f.x,f.y,f.w,f.h);
+  const rimY=f.y+f.h*.40,cx=W*.5;
+  if(fill>0){
+    x.fillStyle="rgba(62,194,255,"+(.25*fill)+")";x.beginPath();x.ellipse(cx,f.y+f.h*.385,f.w*.3,f.h*.035,0,0,6.283);x.fill();
+    const y=rimY+40-70*fill;x.save();x.beginPath();x.rect(0,0,W,rimY+2);x.clip();
+    const g=x.createRadialGradient(cx-8,y-6,4,cx,y,40);g.addColorStop(0,"#fff3b0");g.addColorStop(.5,"#ffd25a");g.addColorStop(1,"#b8860b");
+    x.fillStyle=g;x.beginPath();x.ellipse(cx,y,40,15,0,0,6.283);x.fill();x.strokeStyle="#8a6508";x.lineWidth=3;x.stroke();
+    x.fillStyle="#8a6508";x.font="900 16px sans-serif";x.textAlign="center";x.fillText("10",cx,y+6);x.restore();
+    x.textAlign="left";x.fillStyle="#42e0c8";x.font="900 26px 'Noto Sans TC',sans-serif";x.fillText(fill>=1?"光在水面折一下 → 看到硬幣了！":"倒水中…",30,60);
+    if(fill>=1){x.fillStyle="#ffe08a";x.font="900 20px 'Noto Sans TC',sans-serif";x.fillText("硬幣沒動，是影像被抬高",30,96);}
+  }else{x.fillStyle="#ff6b6b";x.font="900 26px 'Noto Sans TC',sans-serif";x.fillText("被碗邊擋住，看不到硬幣",30,60);}
+  $("s2lbl").textContent=fill>=1?"硬幣浮上來了！":fill>0?"倒水中…":"眼睛在碗邊，硬幣被擋住";
+}
+img2.onload=drawS2;
+function pour(){if(anim||fill>=1)return;let t=0;anim=setInterval(()=>{t+=.04;fill=Math.min(1,t);if(Math.random()<.4)bubbleSound();drawS2();if(fill>=1){clearInterval(anim);anim=null;FX.sound.coin();buzz([50,30,50]);FX.emojiBurst("🪙",24,innerWidth/2,innerHeight*.5);addCoins(5);
+  $("say2").innerHTML="硬幣沒動，是<b>光在水面折一下</b>，影像被抬高——游泳池看起來淺也是這樣<span class='term'>折射・視深</span>";
+  setTimeout(()=>FX.chest({title:"硬幣浮起來了！開寶箱",gem:"🪙",gemName:"折射金幣",gemColor:"#ffd25a",sub:"光在水面折一下，影像被抬高",onDone:()=>{}}),600);}},40);}
+$("pourBtn").onclick=pour;$("ps2").onpointerdown=pour;
+$("emptyBtn").onclick=()=>{if(anim)return;fill=0;splashSound(.3);drawS2();$("say2").textContent="硬幣沒動，等一下會發生魔法";};
+
+/* ===================== 站 3：雷射照片＋互動光線 ===================== */
+const c3=$("c3"),x3=c3.getContext("2d");let ang=40,s3done=false;
+function drawS3(){const W=c3.width,H=c3.height,mid=H*.5,cx=W*.5;x3.clearRect(0,0,W,H);
+  x3.strokeStyle="rgba(255,255,255,.85)";x3.lineWidth=3;x3.setLineDash([10,8]);x3.beginPath();x3.moveTo(cx,40);x3.lineTo(cx,H-30);x3.stroke();x3.setLineDash([]);
+  x3.strokeStyle="rgba(255,255,255,.5)";x3.lineWidth=2;x3.beginPath();x3.moveTo(0,mid);x3.lineTo(W,mid);x3.stroke();
+  const i=ang*Math.PI/180,r=Math.asin(Math.sin(i)/1.33),L=H*.45;
+  x3.lineCap="round";x3.lineWidth=9;x3.strokeStyle="#ffd43b";x3.shadowColor="#ffd43b";x3.shadowBlur=14;x3.beginPath();x3.moveTo(cx-Math.sin(i)*L,mid-Math.cos(i)*L);x3.lineTo(cx,mid);x3.stroke();
+  x3.strokeStyle="#3ef0ff";x3.shadowColor="#3ef0ff";x3.beginPath();x3.moveTo(cx,mid);x3.lineTo(cx+Math.sin(r)*L,mid+Math.cos(r)*L);x3.stroke();x3.shadowBlur=0;
+  x3.setLineDash([6,8]);x3.strokeStyle="rgba(255,212,59,.45)";x3.lineWidth=4;x3.beginPath();x3.moveTo(cx,mid);x3.lineTo(cx+Math.sin(i)*L,mid+Math.cos(i)*L);x3.stroke();x3.setLineDash([]);
+  x3.fillStyle="#ffd43b";x3.font="900 26px 'Noto Sans TC',sans-serif";x3.fillText("入射角 "+ang+"°",cx-260,mid-120);
+  x3.fillStyle="#3ef0ff";x3.fillText("折射角 "+Math.round(r*180/Math.PI)+"°",cx+70,mid+130);
+  x3.fillStyle="rgba(255,255,255,.85)";x3.font="900 18px 'Noto Sans TC',sans-serif";x3.fillText("空氣",24,mid-14);x3.fillText("水",24,mid+30);}
+$("angle").oninput=e=>{ang=+e.target.value;$("angleTxt").textContent=ang+"°";FX.sound.blip();drawS3();
+  if(ang>=60&&!s3done){s3done=true;FX.mascot({emoji:"🤖",name:"機器人小幫手",lines:["看到了嗎？光進水往中間的線靠近！","折射角比入射角小。","這就是折射！"]});}};
+drawS3();
+
+/* ===================== 站 4：生活闖關（觸控小遊戲） ===================== */
+const CARDS=[
+ {img:"img/net.jpg",t:"🎣 夜市撈魚：往哪撈？",kind:"net",term:"折射",hint:"👆 手指移動網子，點一下＝撈！撈到 3 條過關（小心魚會逃）",why:"看到的魚比真的位置高——往看到的地方撈會撈空，要往更深撈。"},
+ {img:"img/pool.jpg",t:"🏊 游泳池：看起來淺？",kind:"pool",term:"視深",hint:"👆 把 🤖 往下拖，看什麼時候才到底",why:"光從水裡出來、在水面折一下，池底影像被抬高——看起來淺，其實更深。跳水前一定要先看深度！"},
+ {img:"img/aquarium.jpg",t:"🐠 魚缸：魚變大了？",kind:"zoom",term:"折射放大",hint:"👆 手指往上滑＝靠近魚缸，靠太近會……",why:"水和彎彎的玻璃讓光換方向，魚的影像被放大——像放大鏡一樣。"},
+ {img:"img/drop.jpg",t:"💧 水滴放大鏡：找金幣",kind:"lens",term:"透鏡",hint:"👆 滑動水滴，找出藏起來的 3 枚金幣",why:"一滴水就是小放大鏡：光穿過水滴換方向，字就變大。"},
+ {img:"img/magnifier.jpg",t:"👓 戴上眼鏡看清楚",kind:"glasses",term:"透鏡",hint:"👆 看不清楚？把鏡片滑過去",why:"鏡片讓光換方向，把光送到眼睛對的位置——眼鏡就是這樣幫忙看清楚的。"},
+ {img:"img/glass-empty.jpg",t:"🥤 珍奶吸管斷了？",kind:"straw",term:"折射",hint:"👆 手指往上滑＝倒珍奶；有平板可以「傾斜倒」",why:"吸管沒斷，是光進飲料折一下，讓它看起來彎。"},
+];
+let got=CARDS.map(()=>false),cur=-1,xpTimers=[],raf=0,tiltFn=null;
+function later(f,ms){xpTimers.push(setTimeout(f,ms));}
+function pg(){const n=got.filter(Boolean).length;$("pgTxt").textContent=n+" / 6";$("pgBar").style.width=(n/6*100)+"%";
+  if(n===6&&!window._allDone){window._allDone=true;$("say4").textContent="🎉 六關全破！";setTimeout(()=>FX.wheel({title:"🎡 折射魔法轉盤",onDone:()=>FX.badge({id:"refract",emoji:"🥤",name:"折射偵探",desc:"光進水會折一下＝折射・六關全破",onDone:()=>FX.fireworks(3000)})}),600);}}
+function getCard(i){if(got[i])return;got[i]=true;const el=document.querySelectorAll(".mc")[i];if(el)el.classList.add("got");FX.sound.coin();FX.emojiBurst("🪙",12,innerWidth/2,innerHeight*.4);pg();}
+$("cards").innerHTML=CARDS.map((c,i)=>`<div class="mc" onclick="openXp(${i})"><img src="${c.img}" alt=""><span class="tap">👆 點我玩</span><span class="ok">✅</span><div class="tt">${c.t}</div></div>`).join("");
+
+function closeXp(){$("xp").classList.remove("show");xpTimers.forEach(clearTimeout);xpTimers=[];cancelAnimationFrame(raf);raf=0;if(tiltFn){window.removeEventListener("deviceorientation",tiltFn);tiltFn=null;}
+  const st=$("xpStage");st.onpointermove=st.onpointerdown=st.onpointerup=st.onpointercancel=null;st.innerHTML="";FX.sound.blip();}
+window.openXp=i=>{cur=i;const c=CARDS[i];FX.sound.jump();ac();$("xpTitle").textContent=c.t;$("xpHint").textContent=c.hint;$("xpWhy").textContent="";$("xpOk").innerHTML="";$("xpCtrl").innerHTML="";
+  const st=$("xpStage");st.innerHTML=`<img class="bg" src="${c.img}" alt=""><div class="flash" id="flash"></div>`;
+  ({net:xpNet,pool:xpPool,zoom:xpZoom,lens:xpLens,glasses:xpGlasses,straw:xpStraw})[c.kind](c,i);
+  $("xp").classList.add("show");};
+function okBtn(i){$("xpOk").innerHTML=`<button class="btn go" onclick="learned(${i})">✅ 我懂了：${CARDS[i].term}</button>`;}
+window.learned=i=>{FX.sound.powerup();$("xpWhy").innerHTML=CARDS[i].why+`<span class="term">${CARDS[i].term}</span>`;getCard(i);addCoins(10);setTimeout(closeXp,2000);};
+function pop(text,cls){const st=$("xpStage");const p=document.createElement("div");p.className="pop "+cls;p.textContent=text;st.appendChild(p);later(()=>p.remove(),1250);}
+function flash(){const f=$("flash");if(!f)return;f.classList.remove("on");void f.offsetWidth;f.classList.add("on");}
+function hit(text,n){pop(text,"hit");FX.sound.coin();buzz([40,30,40]);FX.confetti(40);const r=$("xpStage").getBoundingClientRect();addCoins(n||3,r.left+r.width/2,r.top+r.height/2);}
+function miss(text){pop(text,"miss");FX.sound.wrongsoft();buzz(120);const st=$("xpStage");st.classList.remove("shake");void st.offsetWidth;st.classList.add("shake");}
+function stagePt(e){const r=$("xpStage").getBoundingClientRect();return {x:(e.clientX-r.left)/r.width*960,y:(e.clientY-r.top)/r.height*540,inside:e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom};}
+function addCanvas(){$("xpStage").insertAdjacentHTML("beforeend",`<canvas id="xc" width="960" height="540"></canvas>`);return $("xc").getContext("2d");}
+function bgDraw(x,st){const bg=st.querySelector("img.bg");if(bg.complete&&bg.naturalWidth){const f=cover(bg,960,540);x.drawImage(bg,f.x,f.y,f.w,f.h);}}
+
+/* 1 夜市撈魚：魚會游、會逃、有黃金魚 */
+function xpNet(c,i){const x=addCanvas();const st=$("xpStage");st.insertAdjacentHTML("beforeend",`<div class="score" id="sc">🐟 0 / 3</div><div class="combo" id="cb"></div>`);
+  const SHIFT=95,parts=makeParts();let real={x:600,y:420},net={x:300,y:150},caught=0,busy=false,reveal=false,scoop=0,caughtFish=null,t=0,dir=1,gold=false,combo=0,flee=null;
+  function spawn(){real={x:320+Math.random()*420,y:380+Math.random()*90};dir=Math.random()<.5?1:-1;reveal=false;gold=Math.random()<.3;}
+  function draw(){t+=1/60;x.clearRect(0,0,960,540);bgDraw(x,st);
+    if(!busy&&!flee){real.x+=dir*.6;if(real.x<300||real.x>780)dir*=-1;}
+    if(flee){real.x+=flee.vx;real.y+=flee.vy;flee.n--;if(flee.n<=0){flee=null;real.x=clamp(real.x,300,780);real.y=clamp(real.y,380,470);}}
+    x.strokeStyle="rgba(255,255,255,.55)";x.lineWidth=2;x.setLineDash([8,8]);x.beginPath();x.moveTo(0,270);x.lineTo(960,270);x.stroke();x.setLineDash([]);
+    x.fillStyle="rgba(255,255,255,.8)";x.font="900 16px 'Noto Sans TC',sans-serif";x.fillText("水面",12,262);
+    const wig=Math.sin(t*6)*.12,bob=Math.sin(t*2)*4;
+    drawFish(x,real.x,real.y-SHIFT+bob,170,.8,{flip:dir>0,rot:wig,gold});
+    x.fillStyle=gold?"#fff2a8":"#42e0c8";x.font="900 18px 'Noto Sans TC',sans-serif";x.fillText(gold?"黃金魚！×3":"看到的魚",real.x+80,real.y-SHIFT);
+    if(reveal){drawFish(x,real.x,real.y+bob,170,1,{flip:dir>0,rot:wig,gold});x.fillStyle="#ffd43b";x.fillText("真正的魚（更深）",real.x+80,real.y+8);
+      x.strokeStyle="#ffd43b";x.lineWidth=4;x.beginPath();x.moveTo(real.x-90,real.y-SHIFT+20);x.lineTo(real.x-90,real.y-20);x.stroke();x.beginPath();x.moveTo(real.x-102,real.y-34);x.lineTo(real.x-90,real.y-18);x.lineTo(real.x-78,real.y-34);x.stroke();}
+    if(caughtFish){drawFish(x,caughtFish.x,caughtFish.y,150,1,{rot:Math.sin(t*25)*.3,gold:caughtFish.gold});}
+    const r=50*(1-scoop*.25);x.strokeStyle="#ffd43b";x.lineWidth=7;x.shadowColor="rgba(0,0,0,.6)";x.shadowBlur=8;x.beginPath();x.arc(net.x,net.y,r,0,6.283);x.stroke();
+    x.beginPath();x.moveTo(net.x+r*.7,net.y-r*.7);x.lineTo(net.x+r*.7+110,net.y-r*.7-110);x.stroke();x.shadowBlur=0;
+    x.strokeStyle="rgba(255,212,59,.45)";x.lineWidth=2;for(let k=-2;k<=2;k++){x.beginPath();x.moveTo(net.x+k*r*.4,net.y-Math.sqrt(r*r-(k*r*.4)**2));x.lineTo(net.x+k*r*.4,net.y+Math.sqrt(r*r-(k*r*.4)**2));x.stroke();}
+    parts.step(x);raf=requestAnimationFrame(draw);}
+  spawn();draw();window._net={get real(){return real}};
+  st.onpointermove=e=>{const p=stagePt(e);if(!p.inside||busy)return;net.x=p.x;net.y=p.y;};
+  st.onpointerdown=e=>{const p=stagePt(e);if(busy)return;net.x=p.x;net.y=p.y;busy=true;FX.sound.jump();splashSound(.5);buzz(30);parts.splash(net.x,net.y,22);
+    let s=0;const iv=setInterval(()=>{s+=.12;scoop=Math.min(1,s);if(s>=1){clearInterval(iv);scoop=0;
+      const d=Math.hypot(net.x-real.x,net.y-real.y);
+      if(d<80){caught++;combo++;$("sc").textContent="🐟 "+caught+" / 3";caughtFish={x:net.x,y:net.y,gold};if(gold){pop("黃金魚！","gold");flash();FX.sound.oneup();buzz([60,40,60,40,120]);hit("×3 金幣！",9);}else hit("撈到了！",3);
+        if(combo>=2){$("cb").style.display="block";$("cb").textContent="🔥 連續 "+combo+" 次！";}
+        let k=0;const up=setInterval(()=>{k++;caughtFish.y-=12;caughtFish.x+=2;if(k===8)splashSound(.3);if(k>=25){clearInterval(up);caughtFish=null;
+          if(caught>=3){$("xpWhy").textContent="撈魚高手！你已經知道：要往比看到的更深撈。";FX.stamp({text:"撈魚高手"});FX.balloons&&FX.balloons();okBtn(i);busy=false;}
+          else{spawn();busy=false;}}},30);}
+      else{combo=0;$("cb").style.display="none";reveal=true;const nearImg=Math.hypot(net.x-real.x,net.y-(real.y-SHIFT))<80;miss(nearImg?"撈空了！魚不在那裡":"撈空了！");
+        flee={vx:(real.x<540?1:-1)*6,vy:1.5,n:14};for(let b=0;b<3;b++)later(bubbleSound,b*90);
+        $("xpWhy").textContent=nearImg?"往「看到的地方」撈會撈空——魚其實在更深的地方（黃色），而且牠逃走了！":"魚在更深一點的地方（黃色），牠逃走了，再追！";later(()=>{busy=false;},700);}
+    }},30);};}
+
+/* 2 游泳池：拖 🤖 下潛，泡泡、越深越暗、到底「碰」 */
+function xpPool(c,i){const x=addCanvas();const st=$("xpStage");st.insertAdjacentHTML("beforeend",`<div class="score" id="sc">深度 0.0 m</div>`);
+  const SEEN=300,REAL=470,parts=makeParts();let y=70,drag=false,passed=false,done=false,bump=0,bt=0,t=0;
+  function draw(){t+=1/60;x.clearRect(0,0,960,540);bgDraw(x,st);
+    const depth=clamp((y-130)/(REAL-130),0,1);x.fillStyle="rgba(4,20,50,"+(depth*.45)+")";x.fillRect(0,130,960,410);
+    x.strokeStyle="rgba(255,255,255,.6)";x.lineWidth=2;x.beginPath();x.moveTo(0,130);x.lineTo(960,130);x.stroke();x.fillStyle="#fff";x.font="900 16px 'Noto Sans TC',sans-serif";x.fillText("水面",12,122);
+    x.setLineDash([12,8]);x.strokeStyle="#42e0c8";x.lineWidth=4;x.beginPath();x.moveTo(120,SEEN);x.lineTo(840,SEEN);x.stroke();x.setLineDash([]);
+    x.fillStyle="#42e0c8";x.font="900 22px 'Noto Sans TC',sans-serif";x.fillText("看起來的底 1.2 m",130,SEEN-10);
+    if(passed){x.strokeStyle="#ff6b6b";x.lineWidth=6;x.beginPath();x.moveTo(120,REAL);x.lineTo(840,REAL);x.stroke();x.fillStyle="#ff6b6b";x.fillText("真正的底 1.8 m！",130,REAL-12);}
+    x.strokeStyle="#fff";x.lineWidth=3;x.beginPath();x.moveTo(900,130);x.lineTo(900,REAL);x.stroke();for(let k=0;k<=4;k++){const yy=130+(REAL-130)*k/4;x.beginPath();x.moveTo(890,yy);x.lineTo(910,yy);x.stroke();}
+    if(drag&&y>130&&Math.random()<.25)parts.bubbles(480,y-10,1);
+    x.font="64px serif";x.textAlign="center";x.save();x.translate(480,y+22);x.rotate(Math.sin(t*3)*.08);x.fillText("🤖",0,0);x.restore();x.textAlign="left";
+    if(bump>0){x.fillStyle="rgba(255,255,255,"+bump+")";x.beginPath();x.arc(480,REAL,90*(1-bump)+10,0,6.283);x.fill();}
+    parts.step(x);const m=Math.max(0,depth*1.8);$("sc").textContent="深度 "+m.toFixed(1)+" m";raf=requestAnimationFrame(draw);}
+  draw();
+  st.onpointerdown=e=>{const p=stagePt(e);if(Math.hypot(p.x-480,p.y-y)<80){drag=true;FX.sound.blip();buzz(20);}else{parts.ripple(p.x,p.y);splashSound(.2);}};
+  st.onpointermove=e=>{if(!drag||done)return;const p=stagePt(e);const ny=clamp(p.y,70,REAL);if(ny>y+6&&Date.now()-bt>120){bt=Date.now();bubbleSound();}if(y<130&&ny>=130){splashSound(.6);parts.splash(480,130,20);}y=ny;
+    if(y>SEEN+10&&!passed){passed=true;pop("咦？還沒到底！","miss");FX.sound.boom();buzz([80,40,80]);$("xpWhy").textContent="已經超過「看起來的底」了，還在往下……";}
+    if(y>=REAL&&!done){done=true;drag=false;bump=1;thudSound();buzz(200);flash();st.classList.add("bigshake");later(()=>st.classList.remove("bigshake"),800);parts.bubbles(480,REAL,14);
+      const iv=setInterval(()=>{bump-=.06;if(bump<=0)clearInterval(iv);},30);hit("碰！到底了 1.8 m",5);$("xpWhy").textContent="真正的底比看起來深很多！所以不能看一眼就跳。";FX.stamp({text:"安全第一"});okBtn(i);}};
+  st.onpointerup=st.onpointercancel=()=>{drag=false;};}
+
+/* 3 魚缸：靠近→變大→魚衝出來 */
+function xpZoom(c,i){const st=$("xpStage"),im=st.querySelector("img.bg");const x=addCanvas();let s=1,drag=false,ly=0,done=false,t=0,burst=0;const parts=makeParts();
+  st.insertAdjacentHTML("beforeend",`<div class="score" id="sc">🔍 ×1.0</div>`);
+  function draw(){t+=1/60;x.clearRect(0,0,960,540);
+    if(burst>0){burst+=.06;const w=170*s*Math.min(3,burst*2);drawFish(x,480+Math.sin(t*20)*8,300-burst*60,w,1,{flip:true,rot:Math.sin(t*15)*.2});if(burst>2.2)burst=0;}
+    else{const fx=480+Math.sin(t*.9)*120*s,fy=290+Math.cos(t*1.3)*30;drawFish(x,fx,fy,140*s,1,{flip:Math.cos(t*.9)>0,rot:Math.sin(t*5)*.1});}
+    parts.step(x);raf=requestAnimationFrame(draw);}
+  draw();
+  st.onpointerdown=e=>{drag=true;ly=e.clientY;};st.onpointerup=st.onpointercancel=()=>{drag=false;};
+  st.onpointermove=e=>{if(!drag||done)return;const dy=ly-e.clientY;ly=e.clientY;s=clamp(s+dy*.006,1,2.4);im.style.transform=`scale(${s})`;$("sc").textContent="🔍 ×"+s.toFixed(1);if(Math.abs(dy)>3)FX.sound.blip();
+    if(s>=2.1&&!done){done=true;burst=.1;flash();splashSound(.7);buzz([60,40,160]);parts.splash(480,300,40);st.classList.add("bigshake");later(()=>st.classList.remove("bigshake"),800);
+      hit("哇！魚衝出來了！",5);$("xpWhy").textContent="靠近看，魚變超大——水＋圓玻璃讓光換方向，影像被放大。";okBtn(i);}};}
+
+/* 4 水滴放大鏡：找出 3 枚金幣（會閃、會飛進錢包） */
+function xpLens(c,i){const st=$("xpStage");st.insertAdjacentHTML("beforeend",`<canvas id="xc" width="960" height="540"></canvas><div class="lens" id="lens"><span class="coin" id="lc">🪙</span></div><div class="score" id="sc">🪙 0 / 3</div>`);
+  const x=$("xc").getContext("2d"),lens=$("lens"),im=st.querySelector("img.bg");const ZOOM=2.2;let t=0;
+  const coins3=[{x:220,y:380},{x:700,y:160},{x:520,y:450}].map(o=>({...o,got:false}));let n=0,hover=null,hoverT=0;
+  function draw(){t+=1/60;x.clearRect(0,0,960,540);coins3.forEach((o,k)=>{if(o.got)return;const a=.5+.5*Math.sin(t*4+k*2);x.fillStyle="rgba(255,215,0,"+(.5+a*.5)+")";x.beginPath();x.arc(o.x,o.y,4+a*3,0,6.283);x.fill();x.strokeStyle="rgba(255,255,255,"+a+")";x.lineWidth=2;x.beginPath();x.moveTo(o.x-12,o.y);x.lineTo(o.x+12,o.y);x.moveTo(o.x,o.y-12);x.lineTo(o.x,o.y+12);x.stroke();});raf=requestAnimationFrame(draw);}
+  draw();
+  function place(e){const p=stagePt(e);if(!p.inside)return;const r=st.getBoundingClientRect();const px=p.x/960*r.width,py=p.y/540*r.height;
+    lens.style.display="block";lens.style.left=px+"px";lens.style.top=py+"px";
+    lens.style.backgroundImage=`url(${im.src})`;lens.style.backgroundSize=(r.width*ZOOM)+"px "+(r.height*ZOOM)+"px";
+    lens.style.backgroundPosition=(-(px*ZOOM)+80)+"px "+(-(py*ZOOM)+80)+"px";
+    const near=coins3.find(o=>!o.got&&Math.hypot(o.x-p.x,o.y-p.y)<40);
+    if(near){$("lc").style.display="block";if(hover!==near){hover=near;hoverT=Date.now();FX.sound.blip();buzz(15);}
+      else if(Date.now()-hoverT>450){near.got=true;n++;$("sc").textContent="🪙 "+n+" / 3";pop("找到金幣！","hit");FX.sound.coin();buzz([40,30,40]);addCoins(3,e.clientX,e.clientY);$("lc").style.display="none";hover=null;
+        if(n>=3){FX.confetti(60);$("xpWhy").textContent="水滴＝放大鏡！光穿過水滴換方向，小東西就變大、看得到。";okBtn(i);}}}
+    else{$("lc").style.display="none";hover=null;}}
+  st.onpointermove=e=>{e.preventDefault();place(e);};st.onpointerdown=e=>{place(e);};}
+
+/* 5 眼鏡：整張模糊，鏡片滑到哪裡哪裡清楚 */
+function xpGlasses(c,i){const st=$("xpStage"),im=st.querySelector("img.bg");im.style.filter="blur(7px)";
+  st.insertAdjacentHTML("beforeend",`<div class="lens" id="lens" style="border-radius:40%;width:210px;height:150px"></div><div class="tag" style="left:12px;top:12px" id="gt">😵 沒戴眼鏡：好模糊</div>`);
+  const lens=$("lens");let moved=0,done=false;const ZOOM=1.5;
+  function place(e){const p=stagePt(e);if(!p.inside)return;const r=st.getBoundingClientRect();const px=p.x/960*r.width,py=p.y/540*r.height;
+    lens.style.display="block";lens.style.left=px+"px";lens.style.top=py+"px";lens.style.backgroundImage=`url(${im.src})`;lens.style.backgroundSize=(r.width*ZOOM)+"px "+(r.height*ZOOM)+"px";lens.style.backgroundPosition=(-(px*ZOOM)+105)+"px "+(-(py*ZOOM)+75)+"px";
+    if(++moved===30&&!done){done=true;im.style.transition="filter 1s";im.style.filter="blur(0)";flash();FX.sound.oneup();buzz([50,30,50]);$("gt").textContent="😎 戴上眼鏡：全部清楚了！";hit("看清楚了！",5);$("xpWhy").textContent="鏡片讓光換方向，把影像送到眼睛對的地方。";okBtn(i);}}
+  st.onpointermove=e=>{e.preventDefault();place(e);};st.onpointerdown=e=>{place(e);};}
+
+/* 6 珍奶吸管：上滑倒珍奶／傾斜平板倒 */
+function xpStraw(c,i){const st=$("xpStage");st.innerHTML=`<canvas id="xc" width="1280" height="720"></canvas><div class="flash" id="flash"></div><div class="score" id="sc">🧋 0%</div>`;
+  let lvl=0,drag=false,ly=0,shown=false,bt=0,tilt=false;const cv=$("xc"),x=cv.getContext("2d"),parts=makeParts();
+  function draw(){const g=drawStraw(cv,lvl,true,true);$("sc").textContent="🧋 "+Math.round(lvl*100)+"%";if(g&&drag&&lvl>0&&lvl<1&&Math.random()<.3)parts.bubbles((g.gl+g.gr)/2,g.wy+20,1);parts.step(x);raf=requestAnimationFrame(draw);}
+  if(img1.complete)draw();else img1.addEventListener("load",draw,{once:true});
+  function setLvl(v){lvl=clamp(v,0,1);if(lvl>.5&&!shown){shown=true;pop("斷了？！","miss");buzz([60,40,60]);$("xpWhy").textContent="看起來斷在珍奶裡……按「拿出來看」";
+      $("xpCtrl").insertAdjacentHTML("beforeend",`<button class="btn go" id="pb">🖐️ 拿出來看</button>`);
+      $("pb").onclick=()=>{lvl=0;splashSound(.4);flash();hit("沒斷！",5);$("xpWhy").textContent="同一支吸管，是光進珍奶折一下，讓它看起來彎。";okBtn(i);};}}
+  st.onpointerdown=e=>{drag=true;ly=e.clientY;};st.onpointerup=st.onpointercancel=()=>{drag=false;};
+  st.onpointermove=e=>{if(!drag||tilt)return;const dy=ly-e.clientY;ly=e.clientY;setLvl(lvl+dy*.004);if(Math.abs(dy)>3&&Date.now()-bt>90){bt=Date.now();bubbleSound();}};
+  $("xpCtrl").innerHTML=`<button class="btn aqua" id="tb">📱 用傾斜平板倒珍奶</button>`;
+  $("tb").onclick=async()=>{try{if(typeof DeviceOrientationEvent!=="undefined"&&DeviceOrientationEvent.requestPermission){const r=await DeviceOrientationEvent.requestPermission();if(r!=="granted")throw 0;}}catch(e){$("xpWhy").textContent="這台裝置不支援傾斜，用手指往上滑就好";return;}
+    tilt=true;drag=true;$("tb").textContent="📱 把平板慢慢往自己傾斜…";$("tb").disabled=true;let base=null;
+    tiltFn=ev=>{if(ev.beta==null)return;if(base===null)base=ev.beta;const v=clamp((ev.beta-base)/45,0,1);if(Math.abs(v-lvl)>.01&&Date.now()-bt>120){bt=Date.now();bubbleSound();}setLvl(v);};
+    window.addEventListener("deviceorientation",tiltFn);};}
+
+/* 站 5 真人版計分 */
+let tH=+(localStorage.getItem("refractTallyH")||0),tM=+(localStorage.getItem("refractTallyM")||0);
+function tally(){$("tally").textContent="夾到 "+tH+"・夾空 "+tM;localStorage.setItem("refractTallyH",tH);localStorage.setItem("refractTallyM",tM);}
+$("tHit").onclick=()=>{tH++;tally();FX.sound.coin();buzz([40,30,40]);FX.confetti(70);addCoins(5);$("say5").textContent=["一次夾到！你知道要往更深夾了","高手！硬幣其實比看起來深","太厲害了，全班掌聲！"][tH%3];if(tH%3===0)FX.stamp({text:"神之筷"});};
+$("tMiss").onclick=()=>{tM++;tally();FX.sound.wrongsoft();buzz(120);$("say5").textContent=["夾空了！硬幣看起來比較淺——再往下、往中間一點","不是你的錯，是光騙了你的眼睛（折射）","再來一次，眼睛放低看"][tM%3];};
+$("tReset").onclick=()=>{tH=0;tM=0;tally();FX.sound.blip();};
+tally();
+pg();
+/* ===================== 上課模式：一次一站 ===================== */
+(function(){const hs=[...document.querySelectorAll("h2.sec")];const sts=hs.map(h=>{const s=document.createElement("section");s.className="st";h.parentNode.insertBefore(s,h);const card=h.nextElementSibling;s.appendChild(h);s.appendChild(card);return s;});
+  const N=sts.length;let cur=+(localStorage.getItem("refractLessonCur")||0);if(cur>=N)cur=0;
+  $("ldots").innerHTML=sts.map((s,k)=>`<i title="${s.querySelector("h2").textContent.replace(/"/g,"")}" style="cursor:pointer;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:13px;font-weight:900;color:#08131f">${k+1}</i>`).join("");
+  [...$("ldots").children].forEach((d,k)=>d.onclick=()=>{FX.sound.blip();show(k);});
+  function show(i){cur=clamp(i,0,N-1);sts.forEach((s,k)=>s.classList.toggle("cur",k===cur));$("lstep").textContent="站 "+(cur+1)+" / "+N;[...$("ldots").children].forEach((d,k)=>d.classList.toggle("on",k===cur));
+    $("lprev").style.visibility=cur===0?"hidden":"visible";$("lnext").textContent=cur===N-1?"🏁 完成":"下一站 ➡";localStorage.setItem("refractLessonCur",cur);scrollTo(0,0);}
+  function enter(){document.body.classList.add("lesson");show(cur);FX.sound.jump();}
+  function exit(){document.body.classList.remove("lesson");sts.forEach(s=>s.classList.remove("cur"));FX.sound.blip();}
+  $("lessonBtn").onclick=enter;$("lexit").onclick=exit;
+  $("lprev").onclick=()=>{FX.sound.blip();show(cur-1);};
+  $("lnext").onclick=()=>{if(cur===N-1){FX.sound.clear&&FX.sound.clear();FX.fireworks&&FX.fireworks(2500);FX.confetti(120);setTimeout(exit,2600);return;}FX.sound.blip();show(cur+1);};
+  const m=location.hash.match(/^#lesson(?:-(\d+))?$/);if(m){if(m[1])cur=clamp(+m[1]-1,0,N-1);enter();}})();
+</script>
+</body>
+</html>
