@@ -6,24 +6,43 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <title>10/16 自然代課</title>
 <style>
-  body{margin:0;background:#fff;color:#222;font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",sans-serif;font-size:18px;line-height:1.6}
-  .wrap{max-width:720px;margin:0 auto;padding:24px 16px 48px}
-  h1{font-size:24px;margin:0 0 20px;padding-bottom:8px;border-bottom:2px solid #222}
-  h2{font-size:19px;margin:28px 0 6px}
-  .deck{font-size:20px;font-weight:700;margin:0 0 8px}
-  .prep{margin:0 0 6px;color:#555;font-size:16px}
-  ol{margin:0;padding-left:1.6em}
-  li{padding:6px 0;border-bottom:1px solid #e3e3e3}
-  .m{float:right;color:#888;font-size:15px}
-  a{color:#1a4f8b}
-  .files{margin-top:32px;padding-top:12px;border-top:1px solid #ccc;font-size:16px}
-  .files a{margin-right:18px}
-  footer{margin-top:32px;color:#888;font-size:13px}
+  *{box-sizing:border-box}
+  body{margin:0;background:#f5f3ef;color:#222;font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",sans-serif;font-size:17px;line-height:1.55}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 16px 56px}
+  .hd{margin-bottom:22px}
+  .hd small{display:block;color:#888;font-size:14px;letter-spacing:.08em}
+  .hd h1{margin:2px 0 4px;font-size:30px;letter-spacing:.02em}
+  .hd p{margin:0;color:#555;font-size:16px}
+  h2{font-size:15px;color:#888;font-weight:700;letter-spacing:.08em;margin:26px 0 10px}
+  .papers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .paper{background:#fff;border:1px solid #e2ded6;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+  .paper .th{display:block;aspect-ratio:210/150;overflow:hidden;background:#eee;border-bottom:1px solid #eee}
+  .paper .th img{width:100%;display:block}
+  .paper .nm{padding:8px 10px 2px;font-weight:700;font-size:16px}
+  .paper .ln{padding:0 10px 10px;font-size:14px;color:#1a4f8b;display:flex;gap:12px}
+  .paper .ln a{text-decoration:underline}
+  .deck{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{display:inline-block;background:#fff;border:1px solid #cfcac0;border-radius:8px;padding:10px 16px;font-weight:700}
+  .btn.p{background:#222;color:#fff;border-color:#222}
+  .cls{background:#fff;border:1px solid #e2ded6;border-radius:12px;margin-bottom:14px;overflow:hidden}
+  .ch{display:flex;align-items:baseline;gap:10px;padding:14px 16px 10px;border-bottom:1px solid #eee}
+  .tag{font-size:14px;font-weight:700;color:#fff;border-radius:6px;padding:2px 9px}
+  .tag.a{background:#b4432f}.tag.b{background:#2f5f8f}
+  .ch b{font-size:19px}.ch span.t{color:#888;font-size:15px;margin-left:auto}
+  .prep{padding:8px 16px 0;color:#666;font-size:15px}
+  ol{list-style:none;margin:0;padding:6px 8px 10px;counter-reset:s}
+  ol li a{display:flex;align-items:center;gap:12px;padding:11px 8px;border-radius:8px;font-size:18px;font-weight:700}
+  ol li a:hover{background:#f5f3ef}
+  ol li a::before{counter-increment:s;content:counter(s);flex:none;width:28px;height:28px;border-radius:50%;background:#222;color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center}
+  ol li a::after{content:"›";margin-left:auto;color:#bbb;font-size:22px}
+  ol li a small{font-weight:400;color:#888;font-size:14px}
   .gate,.ended{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:80vh;text-align:center}
-  .gate input{font-size:22px;letter-spacing:.3em;text-align:center;width:140px;padding:6px;border:1px solid #888;border-radius:4px}
-  .gate button{font-size:17px;padding:6px 20px;border:1px solid #888;border-radius:4px;background:#f3f3f3;cursor:pointer}
+  .gate input{font-size:22px;letter-spacing:.3em;text-align:center;width:140px;padding:6px;border:1px solid #888;border-radius:6px}
+  .gate button{font-size:17px;padding:6px 20px;border:1px solid #888;border-radius:6px;background:#fff;cursor:pointer}
   .err{color:#b00;min-height:1.4em;font-size:15px}
   .hide{display:none!important}
+  @media (max-width:560px){.papers{gap:8px}.paper .nm{font-size:13px;padding:6px 7px 0}.paper .ln{font-size:12.5px;padding:0 7px 8px;gap:8px}.hd h1{font-size:26px}ol li a{font-size:17px}}
 </style>
 </head>
 <body>
@@ -38,42 +57,47 @@
 <div class="ended hide" id="ended"><div>本頁已關閉</div></div>
 
 <div class="wrap hide" id="main">
-  <h1>10/16（五）自然代課</h1>
-  <p class="prep" style="font-size:17px;color:#222">紙本：<a href="treasure.pdf?v=1008">放大鏡尋寶單</a>　<a href="draw.pdf?v=1008">「我看到的光」畫卡</a>　<a href="plan.pdf?v=1008">流程單</a></p>
-  <p class="deck">簡報：<a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fhccadaptive.com%2Ff8f9fc3bd1%2Fslides.pptx" target="_blank" rel="noopener">線上播放</a>　<a href="slides.pptx">下載 PPT</a></p>
+  <div class="hd"><small>自然科代課</small><h1>10/16（五）</h1><p>甲班第 5 節・乙班第 6、7 節</p></div>
 
-  <h2>甲班　第 5 節　13:10–13:55</h2>
-  <p class="prep">準備：放大鏡、尋寶單</p>
-  <ol>
-    <li><a href="light-refract/mv.html">MV〈折一下 Snap!〉</a></li>
-    <li><a href="light-lens/lab.html#lesson">透鏡實驗室</a></li>
-    <li><a href="treasure.pdf?v=1008">放大鏡尋寶單</a></li>
-    <li><a href="games/light-dispatch.html">光線特勤隊・出勤！</a>（按「透鏡案件」）</li>
-  </ol>
-
-  <h2>乙班　第 6 節　14:05–14:50</h2>
-  <ol>
-    <li><a href="light-refract/mv.html">MV〈折一下 Snap!〉</a></li>
-    <li><a href="games/taiwan-train.html">光之環島列車</a></li>
-    <li><a href="games/light-dispatch.html">光線特勤隊・出勤！</a>（按「折射案件」）</li>
-  </ol>
-
-  <h2>乙班　第 7 節　15:00–15:45</h2>
-  <p class="prep">準備：透明片、滴管、一杯水、尋寶單、畫卡</p>
-  <ol>
-    <li><a href="light-refract/story.html#life">生活裡的折射</a></li>
-    <li><a href="treasure.pdf?v=1008">水滴放大鏡（尋寶單）</a></li>
-    <li><a href="draw.pdf?v=1008">「我看到的光」畫卡</a></li>
-    <li><a href="light-refract/mv.html">MV 再唱一次</a></li>
-  </ol>
-
-  <div class="files">紙本（請先印好）：
-    <a href="plan.pdf?v=1008">流程單</a>
-    <a href="treasure.pdf?v=1008">尋寶單</a>
-    <a href="draw.pdf?v=1008">畫卡</a>
-    <br><span style="color:#888;font-size:14px">手機打不開 PDF 時看圖：</span><a href="treasure.jpg?v=1008">尋寶單（圖）</a><a href="draw.jpg?v=1008">畫卡（圖）</a>
+  <h2>先印好</h2>
+  <div class="papers">
+    <div class="paper"><a class="th" href="treasure.pdf?v=1008"><img src="treasure.jpg?v=1008" alt=""></a><div class="nm">放大鏡尋寶單</div><div class="ln"><a href="treasure.pdf?v=1008">PDF</a><a href="treasure.jpg?v=1008">圖片</a></div></div>
+    <div class="paper"><a class="th" href="draw.pdf?v=1008"><img src="draw.jpg?v=1008" alt=""></a><div class="nm">我看到的光（畫卡）</div><div class="ln"><a href="draw.pdf?v=1008">PDF</a><a href="draw.jpg?v=1008">圖片</a></div></div>
+    <div class="paper"><a class="th" href="plan.pdf?v=1008b"><img src="plan.jpg?v=1008b" alt=""></a><div class="nm">流程單</div><div class="ln"><a href="plan.pdf?v=1008b">PDF</a><a href="plan.jpg?v=1008b">圖片</a></div></div>
   </div>
 
+  <h2>簡報</h2>
+  <div class="deck"><a class="btn p" href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fhccadaptive.com%2Ff8f9fc3bd1%2Fslides.pptx%3Fv%3D1008b" target="_blank" rel="noopener">線上播放</a><a class="btn" href="slides.pptx?v=1008b">下載 PPT</a></div>
+
+  <h2>上課步驟</h2>
+  <div class="cls">
+    <div class="ch"><span class="tag a">甲班</span><b>第 5 節</b><span class="t">13:10–13:55</span></div>
+    <div class="prep">準備：放大鏡、尋寶單</div>
+    <ol>
+      <li><a href="light-refract/mv.html">MV〈折一下 Snap!〉</a></li>
+      <li><a href="light-lens/lab.html#lesson">透鏡實驗室</a></li>
+      <li><a href="treasure.pdf?v=1008">放大鏡尋寶單</a></li>
+      <li><a href="games/light-refract-quiz.html">折射環島搶答</a></li>
+    </ol>
+  </div>
+  <div class="cls">
+    <div class="ch"><span class="tag b">乙班</span><b>第 6 節</b><span class="t">14:05–14:50</span></div>
+    <ol>
+      <li><a href="light-refract/mv.html">MV〈折一下 Snap!〉</a></li>
+      <li><a href="games/taiwan-train.html">光之環島列車</a></li>
+      <li><a href="games/light-refract-quiz.html">折射環島搶答</a></li>
+    </ol>
+  </div>
+  <div class="cls">
+    <div class="ch"><span class="tag b">乙班</span><b>第 7 節</b><span class="t">15:00–15:45</span></div>
+    <div class="prep">準備：透明片、滴管、一杯水、尋寶單、畫卡</div>
+    <ol>
+      <li><a href="light-refract/story.html#life">生活裡的折射</a></li>
+      <li><a href="treasure.pdf?v=1008">水滴放大鏡 <small>（尋寶單下方）</small></a></li>
+      <li><a href="draw.pdf?v=1008">「我看到的光」畫卡</a></li>
+      <li><a href="light-refract/mv.html">MV 再唱一次</a></li>
+    </ol>
+  </div>
 </div>
 
 <script>
