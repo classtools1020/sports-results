@@ -235,7 +235,7 @@
   /* ---------- 🗂️ 每頁都有「回主選單」（頁面自己沒放時自動補上） ---------- */
 
   /* ===== 代課模式：從代課包進來時，隱藏主選單與網站其他入口，只留「回代課包」 ===== */
-  const UNTIL=Date.parse("2026-10-17T00:00:00+08:00");
+  const UNTIL=Date.parse("2026-10-16T16:00:00+08:00");
   if(Date.now()>=UNTIL){document.documentElement.innerHTML='<body style="background:#0b1626;color:#ffe08a;font:900 28px system-ui;display:grid;place-items:center;height:100vh;margin:0">本教材已下架，謝謝使用 🙏</body>';window.FX=FX;return;}
   FX.sub={url:HOME,until:UNTIL};
   (()=>{const w=()=>{if(document.getElementById("fxwm"))return;const d=document.createElement("div");d.id="fxwm";d.textContent="© 曾瓊瑩老師原創教材・僅供 2026/10/16 代課使用・請勿轉傳";d.style.cssText="position:fixed;right:10px;bottom:6px;z-index:99998;font:700 11px system-ui,sans-serif;color:rgba(255,255,255,.6);text-shadow:0 1px 2px rgba(0,0,0,.85);pointer-events:none";document.body.appendChild(d);};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",w);else w();})();
