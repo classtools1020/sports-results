@@ -235,7 +235,7 @@
   /* ---------- 🗂️ 每頁都有「回主選單」（頁面自己沒放時自動補上） ---------- */
 
   /* ===== 代課模式：從代課包進來時，隱藏主選單與網站其他入口，只留「回代課包」 ===== */
-  const UNTIL=Date.parse("2026-10-16T16:00:00+08:00");
+  const UNTIL=Date.parse("2026-10-16T15:45:00+08:00");
   if(Date.now()>=UNTIL){document.documentElement.innerHTML='<body style="background:#fff;color:#222;font:20px sans-serif;display:grid;place-items:center;height:100vh;margin:0">本頁已關閉</body>';window.FX=FX;return;}
   FX.sub={url:HOME,until:UNTIL};
   FX.homeURL=()=>FX.sub?FX.sub.url:HOME;
