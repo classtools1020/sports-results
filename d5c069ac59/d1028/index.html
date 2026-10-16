@@ -47,8 +47,8 @@
 </head>
 <body>
 <script>if(Date.now()>=Date.parse("2026-10-28T12:00:00+08:00")){document.documentElement.innerHTML='<meta charset="utf-8"><body style="background:#fff;color:#222;font:20px sans-serif;display:grid;place-items:center;height:100vh;margin:0">本頁已關閉</body>';window.stop();}</script>
-<div class="wrap">
-  <a class="back" href="../">← 回日期</a>
+<div class="gate" id="gate"><div>請輸入通關碼</div><input id="code" inputmode="numeric" maxlength="4" autocomplete="off"><button id="open">確定</button><div class="err" id="err"></div></div>
+<div class="wrap hide" id="main">
   <div class="hd"><small>自然科代課</small><h1>10/28（三）</h1><p>乙班第 4 節</p></div>
   <div class="cls">
     <div class="ch"><span class="tag b">乙班</span><b>第 4 節</b><span class="t">11:05–11:50</span></div>
@@ -62,5 +62,6 @@
   </div>
   <div class="tip">溫度計是玻璃：輕輕拿、不甩、不咬。</div>
 </div>
+<script>(function(){const $=id=>document.getElementById(id);const U=Date.parse("2026-10-28T12:00:00+08:00"),H="9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0",K="sub_"+location.pathname;function ok(){$("gate").classList.add("hide");$("main").classList.remove("hide");try{localStorage.setItem(K,String(U));}catch(e){}}try{if(+localStorage.getItem(K)===U)ok();}catch(e){}async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}async function go(){if(await sha($("code").value.trim())===H)ok();else{$("err").textContent="通關碼不正確";$("code").select();}}$("open").onclick=go;$("code").addEventListener("keydown",e=>{if(e.key==="Enter")go();});})();</script>
 </body>
 </html>
