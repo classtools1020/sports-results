@@ -56,7 +56,6 @@
 <div class="ended hide" id="ended"><div>本頁已關閉</div></div>
 <div class="wrap hide" id="main">
   <div class="hd"><small>自然科代課</small><h1>請選日期</h1></div>
-  <div id="c1021"><a class="date" href="d1021/"><div class="d"><b>10/21</b><span>週三</span></div><div class="i"><b><span class="tag a" style="margin-right:8px">甲班</span>第 7 節</b><div>15:00–15:20</div></div><span class="go">開始 ›</span></a></div>
   <div id="c1028"><a class="date" href="d1028/"><div class="d"><b>10/28</b><span>週三</span></div><div class="i"><b><span class="tag b" style="margin-right:8px">乙班</span>第 4 節</b><div>11:05–11:50</div></div><span class="go">開始 ›</span></a></div>
 </div>
 <script>
@@ -65,7 +64,6 @@
   const U1=Date.parse("2026-10-21T15:45:00+08:00"),U2=Date.parse("2026-10-28T12:00:00+08:00"),HASH="9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0",KEY="subpack";
   const now=Date.now();
   if(now>=U2){try{localStorage.removeItem(KEY);}catch(e){}$("gate").classList.add("hide");$("ended").classList.remove("hide");return;}
-  if(now>=U1)$("c1021").innerHTML='<div class="date" style="color:#999"><div class="d"><b>10/21</b><span>週三</span></div><div class="i"><b>已結束</b></div></div>';
   function unlock(){$("gate").classList.add("hide");$("main").classList.remove("hide");
     try{localStorage.setItem(KEY,JSON.stringify({url:location.pathname,until:U2}));}catch(e){}}
   try{const p=JSON.parse(localStorage.getItem(KEY)||"null");if(p&&p.url===location.pathname&&now<p.until)unlock();}catch(e){}
