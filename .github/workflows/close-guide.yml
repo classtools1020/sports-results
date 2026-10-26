@@ -1,0 +1,69 @@
+# 11/6（五）14:30（臺灣時間）把 hccadaptive.com/guide/ 換成「工作人員手冊已關閉」一頁。
+# 原手冊檔案從 main 移除，但保留在 git 歷史；成績公告（guide 以外的檔案）不動。
+# 手動執行：Actions → 這個 workflow → Run workflow。
+#   test 勾選（預設）＝結果推到 close-guide-test 分支，不動 main；
+#   test 取消＝立刻正式關閉。
+name: 11/6 14:30 關閉工作人員手冊
+
+on:
+  schedule:
+    - cron: '30 6 6 11 *'   # UTC 06:30 = 臺灣 14:30；GitHub 排程可能延遲幾分鐘
+  workflow_dispatch:
+    inputs:
+      test:
+        description: '測試模式：推到 close-guide-test 分支，不動 main'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency: close-guide
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 只在 2026-11-06 自動執行
+        if: github.event_name == 'schedule'
+        run: |
+          today=$(TZ=Asia/Taipei date +%F)
+          if [ "$today" != "2026-11-06" ]; then
+            echo "今天 $today，不執行"
+            echo "SKIP=1" >> "$GITHUB_ENV"
+          fi
+
+      - name: 換成關閉頁
+        if: env.SKIP != '1'
+        run: |
+          if [ ! -f guide/app.js ]; then
+            echo "guide 已是關閉頁，不再處理"
+            echo "SKIP=1" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          git rm -rq guide
+          mkdir guide
+          cp .github/guide-closed.html guide/index.html
+          git add guide
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -q -m "11/6 14:30 關閉工作人員手冊（原檔保留在 git 歷史）"
+
+      - name: 推送
+        if: env.SKIP != '1'
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.test }}" = "true" ]; then
+            git push -f origin HEAD:refs/heads/close-guide-test
+            echo "測試模式：已推到 close-guide-test，main 未變動"
+          else
+            git push origin HEAD:main
+          fi
+
+      - name: 要求 GitHub Pages 重新部署
+        if: env.SKIP != '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" --jq .status
