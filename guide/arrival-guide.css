@@ -1,0 +1,28 @@
+.arrival-guide{--arrival-green:#123b32;--arrival-line:#cad7cf;--arrival-cream:#f7f6ef;--arrival-yellow:#f8c548;margin:40px 0 34px;padding-top:28px;border-top:1px solid var(--arrival-line);color:var(--arrival-green)}
+.arrival-guide-heading{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:22px}
+.arrival-guide-heading h2{margin:0;font-size:26px;line-height:1.4}
+.arrival-guide-heading>p{margin:0;font-size:13px;line-height:1.8;color:#45604e}
+.arrival-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;align-items:start}
+.arrival-card{min-width:0;border:1px solid var(--arrival-line);background:#fff}
+.arrival-card-venue{background:var(--arrival-cream);border-top:4px solid var(--arrival-green)}
+.arrival-card-body{padding:26px}
+.arrival-card-label{margin:0 0 18px;font-size:13px;line-height:1.6;color:#45604e}
+.arrival-card h3{margin:0 0 13px;font-size:22px;line-height:1.6;font-weight:700}
+.arrival-card h3>span{display:inline-block;font-size:.76em;font-weight:500;white-space:nowrap}
+.arrival-card address{font-style:normal;font-size:14px;line-height:1.9;overflow-wrap:anywhere}
+.arrival-dropoff{margin:26px 0 24px;padding:17px 18px;border-left:4px solid var(--arrival-yellow);background:#fff}
+.arrival-dropoff h4{margin:0 0 8px;font-size:16px;line-height:1.6;font-weight:700}
+.arrival-dropoff p,.arrival-parking-note{margin:0;font-size:14px;line-height:1.9;color:#45604e}
+.arrival-parking-note{margin:17px 0 19px}
+.arrival-map-link{display:inline-flex;align-items:center;justify-content:space-between;gap:23px;min-height:44px;padding:9px 14px;border:1px solid var(--arrival-green);font-size:14px;line-height:1.7;font-weight:700}
+.arrival-map-link:hover{background:var(--arrival-green);color:#fff}
+.arrival-guide .arrival-source{margin:18px 0 0;font-size:12px;line-height:1.9;color:#45604e}
+.arrival-source a,.arrival-parking-photo figcaption a{text-decoration:underline;text-underline-offset:3px}
+.arrival-parking-photo{margin:0}
+.arrival-parking-photo>a{position:relative;display:block;background:#edf1e8}
+.arrival-parking-photo img{display:block;width:100%;height:auto}
+.arrival-photo-action{position:absolute;right:12px;bottom:12px;display:inline-flex;gap:13px;align-items:center;min-height:40px;padding:6px 12px;background:#fff;color:var(--arrival-green);font-size:12px;font-weight:700;line-height:1.7}
+.arrival-parking-photo figcaption{margin:0;padding:11px 20px;border-bottom:1px solid var(--arrival-line);font-size:11px;line-height:1.8;color:#45604e}
+.arrival-guide a:focus-visible{outline:3px solid var(--arrival-yellow);outline-offset:4px}
+@media(max-width:680px){.arrival-guide{margin:28px 0;padding-top:23px}.arrival-guide-heading{display:block;margin-bottom:17px}.arrival-guide-heading h2{font-size:23px}.arrival-guide-heading>p{margin-top:8px;font-size:12px}.arrival-guide-grid{grid-template-columns:1fr;gap:22px}.arrival-card-body{padding:22px}.arrival-card h3{font-size:20px}.arrival-card address{font-size:13px}.arrival-card-label{margin-bottom:13px}.arrival-dropoff{margin:22px 0 20px;padding:15px}.arrival-dropoff h4{font-size:15px}.arrival-dropoff p,.arrival-parking-note{font-size:13px}.arrival-map-link{font-size:13px}.arrival-parking-photo figcaption{padding:10px 16px}.arrival-guide .arrival-source{font-size:11px}}
+@media print{.arrival-guide{break-inside:avoid;margin:20pt 0;padding-top:14pt}.arrival-guide-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16pt}.arrival-card-body{padding:14pt}.arrival-card{background:#fff}.arrival-guide-heading h2{font-size:18pt}.arrival-card h3{font-size:14pt}.arrival-photo-action{display:none}.arrival-map-link{font-size:10pt;min-height:0;padding:4pt 7pt}.arrival-parking-photo figcaption{font-size:8pt}.arrival-dropoff{margin:12pt 0;padding:9pt}}
