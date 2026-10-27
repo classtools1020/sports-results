@@ -3,7 +3,7 @@
  const buildings={
   center:{code:'C',title:'活動中心',label:'開閉幕、休息與室內競賽',description:'各校休息區與舞台都在活動中心；報到服務台在活動中心外側走廊。',note:'室內競賽：草地投籃、顆星連珠、沙包投擲賽。',link:'#places/rest',action:'找各校休息區'},
   court:{code:'H',title:'風雨球場',label:'競賽與醫護支援',description:'風雨球場是另一處競賽場地。醫護站位於體育場旁，確切位置依現場標示。',note:'場內競賽：舀杯高手、看你多搖擺、九宮格、速速配、目標一致、階梯球、弓箭標靶。',link:'#help',action:'查看現場協助'},
-  toilets:{code:'C',title:'廁所',label:'活動中心與國小部',description:'C棟活動中心有男女廁及無障礙廁所；在風雨球場活動時，有需要可臨時使用國小部男女廁（國小部沒有無障礙廁所）。',note:'活動中心及國小部指定廁所09:00–14:00由愛幫忙清潔公司清潔。現場如需衛生紙或濕紙巾，可向服務台詢問。',link:'#places/access',action:'查看廁所與遊覽車下車照片'}
+  toilets:{code:'C',title:'廁所',label:'活動中心與國小部',description:'C棟活動中心有男女廁及無障礙廁所；在風雨球場活動時，有需要可臨時使用國小部男女廁（國小部沒有無障礙廁所）。',note:'活動中心及國小部指定廁所09:00–14:00由愛幫忙清潔公司清潔；竹特借用國小部廁所的條件是用後清掃、恢復原狀。現場如需衛生紙或濕紙巾，可向服務台詢問。',link:'#places/access',action:'查看廁所與遊覽車下車照片'}
  };
  const overviewPhotos=[
   {id:'center-restroom',title:'活動中心內廁所',src:'assets/center-restroom-reference.jpeg',width:960,height:1280,alt:'活動中心內的木地板走廊與廁所標誌'},
